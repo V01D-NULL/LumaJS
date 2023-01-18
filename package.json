@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.20.7",
+    "parcel": "^2.8.2",
+    "watch": "^1.0.2"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "serve": "npx parcel demo/index.html",
+    "watch": "watch 'npm run build' ./src",
+    "dev": "npm run serve& watch 'npm run build' ./src"
+  }
+}
