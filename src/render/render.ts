@@ -71,7 +71,7 @@ export class Renderer {
     component,
     props,
     children,
-  }: IVirtualDomComponent): any => {
+  }: IVirtualDomComponent): Element => {
     const htmlElement = document.createElement(component);
     const properties = Object.keys(props ?? {});
 
