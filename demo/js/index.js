@@ -1,48 +1,41 @@
-import { Framework } from '../../src/index.js'
+import Framework, { FrameworkDOM } from '../../src/index.js'
 
-const SpaceDoggo = (
-    <div>
-        This is my custom nested component: space doggo 🐶
-    </div>
-)
-
-// Alternatively you can use `function foo(props) {...}`
-function ConditionalRendering({ sayHi, someOtherParameter }) {
-    return (
-        <div>
-            props.sayHi indicates I should say: {sayHi ? 'Hi!' : 'Bye!'}
-            <br />
-            Here is the value of 'someOtherParameter': {someOtherParameter}
-            <br />
-            <br />
-        </div>
-    )
+class NotApp extends Framework.Component {
+    render() {
+        return <div> Hello, I'm defintely not app but I am rendered inside of it. </div>
+    }
 }
 
-const MyComponent = (
-    // Creating some HTML elements
-    <div id="my-div">
-        This is a div with an id of "my-div"
-        <p class="my-class">
-            This is a paragraph with a class of "my-class"
-        </p>
-        <p wanna-sprite-cranberry>
-            This is a paragraph with a custom attribute called "wanna-sprite-cranberry"
-        </p>
+class App extends Framework.Component {
+    constructor() {
+        super();
+        this.state = { breed: 'Golden Retriever' };
+    }
 
-        {/* Rendering a custom JSX component */}
-        <SpaceDoggo />
+    SpaceDoggo() {
+        return <div>This is my custom nested component: space doggo 🐶</div>;
+    }
 
-        {/* Conditional rendering via a function and some arguments */}
-        <br />
-        I can even use JSX for conditional rendering:
-        <br />
-        <ConditionalRendering sayHi={true} someOtherParameter={'Mario'} />
+    render() {
+        return <div>
+            <p>This is a p tag inside of a div.</p>
+            <hr />
 
-        <ConditionalRendering sayHi={false} someOtherParameter={'Luigi'} />
+            There is also support for nested components:
+            <this.SpaceDoggo></this.SpaceDoggo>
+            <hr />
 
-    </div>
-)
+            There is primitive support (WIP) for states:
+            <br />
+            Space doggo is a {this.state.breed}
 
-// Framework.render(MyComponent, document.querySelector("#app-root"));
-Framework.render(<MyComponent />, document.querySelector("#app-root"));
+            <hr />
+            Last but not least you can render a class the inherits from Framework.Component and has a render function:
+            <br />
+            <NotApp></NotApp>
+        </div>;
+    }
+};
+
+const root = FrameworkDOM.createRoot(document.querySelector("#app-root"));
+root.render(App, document.querySelector("#app-root"));

@@ -2,14 +2,14 @@
  *  This is the main file that will be included by the client.
  *  It's purpose is to create, initialize, store and expose the Framework
  */
-import { Renderer } from "./render/render";
-import { IFramework } from "./interfaces/framework";
+import { Component } from "./dom/component";
+import Dom from "./dom/dom";
 
-const { createElement, render } = new Renderer();
-
-const framework: IFramework = {
-  createElement,
-  render,
+const Framework = {
+  Component: Component,
 };
 
-export const Framework = new Proxy(framework, {});
+const FrameworkDOM = new Dom();
+
+export default Framework;
+export { FrameworkDOM };

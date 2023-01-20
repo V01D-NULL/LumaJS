@@ -1,15 +1,13 @@
+import { Component } from "../dom/component";
 import { IVirtualDomComponent } from "../interfaces/virtual-dom";
-import { MutationObserver } from "./observer/mutation-observer";
 
 /**
- * @abstract Manages state of both real and virtual dom components and renders any changes
+ * @abstract Renders the virtual dom tree to the real DOM
  */
 export class Renderer {
   private initialized: boolean = false;
-  private virtualDom: IVirtualDomComponent = {} as IVirtualDomComponent;
-  private mutationObserver: MutationObserver = new MutationObserver();
 
-  public render = (layout: IVirtualDomComponent, root: Element) => {
+  public render = (rootComponent: any, root: Element): void => {
     if (this.initialized) {
       console.error(
         "Render: A call to render has been previously been made. Subsequent calls to render() are superflous because this Framework will manage the applications state"
@@ -18,53 +16,18 @@ export class Renderer {
       return;
     }
 
-    this.mutationObserver.trackDom(root, { subtree: true, childList: true });
-    root.append(this.renderComponents(layout));
-    this.initialized = true;
-  };
-
-  // Used by babel
-  public createElement = (
-    component: string,
-    props?: Object,
-    ...children: Array<Object>
-  ): IVirtualDomComponent => {
-    /*
-     *   This handles a niche case where the we pass a custom component to the render function:
-     *   render(<My Component />, ...);
-     *   The 'component' argument will contain the actual contents of the component (i.e. an Object/virtual dom component) instead of a string.
-     *   In order to avoid passing weird data to the render routine we simply update the virtual dom arguments to reflect a valid state here by copying valid data into the arguments
-     */
-    if (typeof component === "object") {
-      const patchedComponent: IVirtualDomComponent = component;
-      component = patchedComponent.component;
-      props = patchedComponent.props;
-      children = patchedComponent.children || [];
-    }
-
-    /*
-     *   This handles a case in which the dom component we want to render is a function returning some JSX
-     */
-    if (typeof component === "function") {
-      const patchedComponent: IVirtualDomComponent = (component as Function)(
-        props
+    if (!(rootComponent.prototype instanceof Component)) {
+      console.error(
+        "Cannot render class that does not inherit from 'Component'"
       );
-
-      component = patchedComponent.component;
-      props = patchedComponent.props;
-      children = patchedComponent.children || [];
+      return;
     }
 
-    const domComponent: IVirtualDomComponent = {
-      component: component,
-      props: props,
-      children: [...children],
-    };
+    // Create an instance of a class that will return the JSX it should render
+    rootComponent = new (<typeof rootComponent>rootComponent)();
 
-    console.log("Got vDom:", domComponent);
-
-    this.virtualDom = domComponent;
-    return domComponent;
+    this.initialized = true;
+    root.append(this.renderComponents(rootComponent.render()));
   };
 
   private renderComponents = ({
