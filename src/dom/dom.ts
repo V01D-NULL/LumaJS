@@ -1,5 +1,6 @@
 import { IVirtualDomComponent } from "../interfaces/virtual-dom";
 import { Renderer } from "../render/render";
+import getComponent from "../util/cached-component";
 import { Component } from "./component";
 
 class Dom {
@@ -40,9 +41,7 @@ class Dom {
       let patchedComponent: IVirtualDomComponent;
       const isClass = (<any>component).prototype instanceof Component;
 
-      // Todo: Might be best to make this component alloction a util.
-      // Said util could then be responsible for caching (and tagging) the allocated class
-      if (isClass) patchedComponent = new (component as any)()?.render();
+      if (isClass) patchedComponent = getComponent(component)?.render();
       else patchedComponent = (component as Function)(props);
 
       component = patchedComponent.component;

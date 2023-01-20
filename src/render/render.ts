@@ -1,5 +1,6 @@
 import { Component } from "../dom/component";
 import { IVirtualDomComponent } from "../interfaces/virtual-dom";
+import getComponent from "../util/cached-component";
 
 /**
  * @abstract Renders the virtual dom tree to the real DOM
@@ -23,8 +24,7 @@ export class Renderer {
       return;
     }
 
-    // Create an instance of a class that will return the JSX it should render
-    rootComponent = new (<typeof rootComponent>rootComponent)();
+    rootComponent = getComponent(rootComponent);
 
     this.initialized = true;
     root.append(this.renderComponents(rootComponent.render()));
