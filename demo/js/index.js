@@ -2,7 +2,12 @@ import Framework, { FrameworkDOM } from '../../src/index.js'
 
 class NotApp extends Framework.Component {
     render() {
-        return <div> Hello, I'm defintely not app but I am rendered inside of it. </div>
+        return <div> Hello, I'm defintely not app but I am rendered inside of it.
+            <div>
+                Here are two props that have been passed to a class instead of a function:
+                "{this.props.foo}" and "{this.props.bar}"
+            </div>
+        </div>;
     }
 }
 
@@ -12,8 +17,8 @@ class App extends Framework.Component {
         this.state = { breed: 'Golden Retriever' };
     }
 
-    SpaceDoggo() {
-        return <div>This is my custom nested component: space doggo 🐶</div>;
+    SpaceDoggo(props) {
+        return <div>This is my custom nested component: space doggo 🐶. Props: {props.bark}</div>;
     }
 
     render() {
@@ -22,7 +27,7 @@ class App extends Framework.Component {
             <hr />
 
             There is also support for nested components:
-            <this.SpaceDoggo></this.SpaceDoggo>
+            <this.SpaceDoggo bark={'Woof'}></this.SpaceDoggo>
             <hr />
 
             There is primitive support (WIP) for states:
@@ -32,7 +37,9 @@ class App extends Framework.Component {
             <hr />
             Last but not least you can render a class the inherits from Framework.Component and has a render function:
             <br />
-            <NotApp></NotApp>
+            <NotApp foo={'This is a prop named \'foo\''} bar={'This is a prop named \'bar\''}></NotApp>
+
+            <hr />
         </div>;
     }
 };

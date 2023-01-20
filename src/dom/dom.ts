@@ -29,7 +29,7 @@ class Dom {
     if (typeof component === "object") {
       const patchedComponent: IVirtualDomComponent = component;
       component = patchedComponent.component;
-      props = patchedComponent.props;
+      props = patchedComponent?.props;
       children = patchedComponent.children || [];
     }
 
@@ -41,12 +41,16 @@ class Dom {
       let patchedComponent: IVirtualDomComponent;
       const isClass = (<any>component).prototype instanceof Component;
 
-      if (isClass) patchedComponent = getComponent(component)?.render();
-      else patchedComponent = (component as Function)(props);
-
+      if (isClass) {
+        const instance = getComponent(component);
+        instance.props = props;
+        patchedComponent = instance?.render();
+      } else {
+        patchedComponent = (component as Function)(props);
+      }
       component = patchedComponent.component;
-      props = patchedComponent.props;
       children = patchedComponent.children || [];
+      props = patchedComponent.props;
     }
 
     const domComponent: IVirtualDomComponent = {

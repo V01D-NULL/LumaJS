@@ -3,6 +3,6 @@ import { Renderer } from "../render/render";
 
 export class Component {
   public state: any = null; // make this useful..
-  // todo.... props....
+  public props: Object = {};
   public constructor() {}
 }
