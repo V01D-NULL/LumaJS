@@ -1,6 +1,7 @@
 import { Component } from "../dom/component";
 import { IVirtualDomComponent } from "../interfaces/virtual-dom";
 import getComponentClassInstance from "../util/cached-component";
+import { diffFibers } from "../util/virtual-dom-diffing";
 import { FiberEngine } from "./fiber/fibers";
 
 /**
@@ -8,6 +9,7 @@ import { FiberEngine } from "./fiber/fibers";
  */
 export class Renderer {
   private initialized: boolean = false;
+  private root_component: any;
 
   public render = (rootComponent: any, root: Element): void => {
     if (this.initialized) {
@@ -27,12 +29,35 @@ export class Renderer {
 
     // Render the virtual dom and populate the fibers
     this.initialized = true;
+    this.root_component = rootComponent;
     rootComponent = getComponentClassInstance(rootComponent);
     this.craftVirtualComponent(rootComponent.render());
 
     // Append the root fiber to the real dom (i.e. render the entire tree)
     const { dom } = FiberEngine.rootFiber();
     root.append(dom);
+
+    // // setInterval
+    setTimeout(() => {
+      FiberEngine.update();
+      FiberEngine.setDiffingState(true);
+
+      // This is where the diffing algorithm will run.
+      // It will check each component and compare it against the shadow DOM in the fibers. If there are any differences, it will update the real DOM
+      const rootComponent = getComponentClassInstance(this.root_component);
+      this.craftVirtualComponent(rootComponent.render());
+
+      const { dom } = FiberEngine.rootFiber();
+      root.append(dom);
+
+      const originalFiber = FiberEngine.getFibers(); // This is the original fiber
+      const newFiber = FiberEngine.getDiffingFibers(); // This fiber was just created
+
+      const diff = diffFibers(originalFiber, newFiber);
+      console.log("DIFF: ", diff);
+
+      FiberEngine.setDiffingState(false);
+    }, 3000);
   };
 
   // Generate a virtual dom component
@@ -51,6 +76,12 @@ export class Renderer {
       };
 
       htmlElement.setAttribute(key, value);
+
+      // Quick hack to get onclick working
+      if (key === "onClick")
+        htmlElement.onclick = function (e) {
+          value(e);
+        };
     });
 
     children?.forEach((child: string | any): void => {

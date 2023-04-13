@@ -40,6 +40,10 @@ class App extends Framework.Component {
             <NotApp foo={'This is a prop named \'foo\''} bar={'This is a prop named \'bar\''}></NotApp>
 
             <hr />
+
+            <p state={this.state} priority> This tag has a state: {this.state.breed} </p>
+
+            <button onClick={() => this.state.breed = 'ABC'}>Change the state</button>
         </div>;
     }
 };

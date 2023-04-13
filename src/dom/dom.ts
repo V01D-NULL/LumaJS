@@ -1,4 +1,4 @@
-import { IVirtualDomComponent } from "../interfaces/virtual-dom";
+import { IProps, IVirtualDomComponent } from "../interfaces/virtual-dom";
 import { Renderer } from "../render/render";
 import getComponentClassInstance from "../util/cached-component";
 import { Component } from "./component";
@@ -18,7 +18,7 @@ class Dom {
   // Used by babel
   public createElement = (
     component: string,
-    props?: Object,
+    props?: IProps,
     ...children: Array<Object>
   ): IVirtualDomComponent => {
     /*
@@ -54,22 +54,54 @@ class Dom {
       props = patchedComponent.props;
     }
 
+    const { onClick } = props || {};
+
     const domComponent: IVirtualDomComponent = {
       component: component,
       props: props,
       children: [...children],
+      eventListeners: onClick,
     };
+
+    if (FiberEngine.getDiffingState()) {
+      // const existingFibers = FiberEngine.getFibers();
+      // existingFibers.forEach((fiber: any) => {
+      //   let tmpFiber: IFiber = {
+      //     domComponent,
+      //     dom: this.renderer.craftVirtualComponent(domComponent),
+      //   };
+
+      //   const obersvable = tmpFiber.domComponent.props?.state;
+      //   const hash = hashCode(JSON.stringify(tmpFiber));
+      //   tmpFiber = { ...tmpFiber, hash, state: obersvable };
+
+      //   if (tmpFiber.hash === fiber.hash) {
+      //     console.log("Fiber already exists");
+      //     return;
+      //   }
+
+      //   // console.log("tmpFiber", tmpFiber);
+      //   // console.log("fiber", fiber);
+      // });
+
+      FiberEngine.addFiberToDiff({
+        domComponent,
+        dom: this.renderer.craftVirtualComponent(domComponent),
+      });
+
+      return domComponent;
+    }
 
     FiberEngine.addFiber({
       domComponent,
       dom: this.renderer.craftVirtualComponent(domComponent),
     });
 
-    console.log(
-      "fibers:",
-      FiberEngine.getFibers().map((fiber: any) => fiber.dom),
-      FiberEngine.getFibers().map((fiber: any) => fiber.domComponent)
-    );
+    // console.log(
+    //   "fibers:",
+    //   FiberEngine.getFibers().map((fiber: any) => fiber.dom),
+    //   FiberEngine.getFibers().map((fiber: any) => fiber.domComponent)
+    // );
 
     return domComponent;
   };
