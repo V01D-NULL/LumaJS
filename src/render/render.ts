@@ -1,6 +1,7 @@
 import { Component } from "../dom/component";
 import { IVirtualDomComponent } from "../interfaces/virtual-dom";
-import getComponent from "../util/cached-component";
+import getComponentClassInstance from "../util/cached-component";
+import { FiberEngine } from "./fiber/fibers";
 
 /**
  * @abstract Renders the virtual dom tree to the real DOM
@@ -17,20 +18,25 @@ export class Renderer {
       return;
     }
 
-    if (!(rootComponent.prototype instanceof Component)) {
+    if (!(rootComponent?.prototype instanceof Component)) {
       console.error(
         "Cannot render class that does not inherit from 'Component'"
       );
       return;
     }
 
-    rootComponent = getComponent(rootComponent);
-
+    // Render the virtual dom and populate the fibers
     this.initialized = true;
-    root.append(this.renderComponents(rootComponent.render()));
+    rootComponent = getComponentClassInstance(rootComponent);
+    this.craftVirtualComponent(rootComponent.render());
+
+    // Append the root fiber to the real dom (i.e. render the entire tree)
+    const { dom } = FiberEngine.rootFiber();
+    root.append(dom);
   };
 
-  private renderComponents = ({
+  // Generate a virtual dom component
+  public craftVirtualComponent = ({
     component,
     props,
     children,
@@ -50,7 +56,7 @@ export class Renderer {
     children?.forEach((child: string | any): void => {
       // Child can be either text or a nested component
       const childComponent =
-        typeof child === "string" ? child : this.renderComponents(child);
+        typeof child === "string" ? child : this.craftVirtualComponent(child);
 
       htmlElement.append(childComponent);
     });

@@ -1,7 +1,8 @@
 import { IVirtualDomComponent } from "../interfaces/virtual-dom";
 import { Renderer } from "../render/render";
-import getComponent from "../util/cached-component";
+import getComponentClassInstance from "../util/cached-component";
 import { Component } from "./component";
+import { FiberEngine } from "../render/fiber/fibers";
 
 class Dom {
   private renderer: Renderer;
@@ -42,7 +43,7 @@ class Dom {
       const isClass = (<any>component).prototype instanceof Component;
 
       if (isClass) {
-        const instance = getComponent(component);
+        const instance = getComponentClassInstance(component);
         instance.props = props;
         patchedComponent = instance?.render();
       } else {
@@ -59,9 +60,17 @@ class Dom {
       children: [...children],
     };
 
-    console.log("virtual dom component:", domComponent);
+    FiberEngine.addFiber({
+      domComponent,
+      dom: this.renderer.craftVirtualComponent(domComponent),
+    });
 
-    // this.virtualDom = domComponent;
+    console.log(
+      "fibers:",
+      FiberEngine.getFibers().map((fiber: any) => fiber.dom),
+      FiberEngine.getFibers().map((fiber: any) => fiber.domComponent)
+    );
+
     return domComponent;
   };
 }
