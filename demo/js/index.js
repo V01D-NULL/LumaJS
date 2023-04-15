@@ -1,4 +1,5 @@
 import Framework, { FrameworkDOM } from '../../src/index.js'
+import { readonly } from '../../src/api/decorators/index.js'
 
 class NotApp extends Framework.Component {
     render() {
@@ -12,8 +13,11 @@ class NotApp extends Framework.Component {
 }
 
 class App extends Framework.Component {
+    @readonly foo = 'bar';
+
     constructor() {
         super();
+        // this.foo = 'baz'
         this.state = { breed: 'Golden Retriever' };
     }
 
