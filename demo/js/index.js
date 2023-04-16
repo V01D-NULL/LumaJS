@@ -1,13 +1,23 @@
 import Framework, { FrameworkDOM } from '../../src/index.js'
-import { readonly } from '../../src/api/decorators/index.js'
+import { deprecated, readonly } from '../../src/api/decorators/index.js'
+
+@deprecated
+class LegacyCode extends Framework.Component {
+    render() {
+        return <div>
+            This is legacy code.
+        </div>
+    }
+}
 
 class NotApp extends Framework.Component {
     render() {
-        return <div> Hello, I'm defintely not app but I am rendered inside of it.
-            <div>
-                Here are two props that have been passed to a class instead of a function:
-                "{this.props.foo}" and "{this.props.bar}"
-            </div>
+        return <div>
+            Here are two props that have been passed to a class instead of a function.
+            <br />
+            <br />
+            These are the props:
+            "{this.props.foo}" and "{this.props.bar}"
         </div>;
     }
 }
@@ -17,7 +27,7 @@ class App extends Framework.Component {
 
     constructor() {
         super();
-        // this.foo = 'baz'
+        // this.foo = 'baz' // This will blow up. Try it!
         this.state = { breed: 'Golden Retriever' };
     }
 
@@ -27,27 +37,38 @@ class App extends Framework.Component {
 
     render() {
         return <div>
-            <p>This is a p tag inside of a div.</p>
+            <h1>Welcome to a demonstration of my custom Framework :D</h1>
             <hr />
 
-            There is also support for nested components:
+            The @deprecated decorator will log a warning to the console when using the LegacyCode component:
+            <LegacyCode />
+            <br />
+
+            Here we are rendering "SpaceDoggo", which is actually a function returning JSX!
             <this.SpaceDoggo bark={'Woof'}></this.SpaceDoggo>
             <hr />
 
-            There is primitive support (WIP) for states:
+            There is primitive support for states (it's an ongoing work in progress):
             <br />
             Space doggo is a {this.state.breed}
 
             <hr />
-            Last but not least you can render a class the inherits from Framework.Component and has a render function:
+            You can render a class the inherits from Framework.Component assuming it has a valid render() function:
             <br />
-            <NotApp foo={'This is a prop named \'foo\''} bar={'This is a prop named \'bar\''}></NotApp>
+            <NotApp foo={'This is a prop named \'foo\''} bar={'This is a prop named \'bar\''} />
 
             <hr />
 
-            <p state={this.state} priority> This tag has a state: {this.state.breed} </p>
+            Lastly, there is support for conditional rendering.
+            <br />
+            Don't see it? Change the state!
+            {this.state.breed === 'Doggo' && <p>This was conditionally rendered because you changed the state to 'Doggo'. How about that :D</p>}
 
-            <button onClick={() => this.state.breed = 'ABC'}>Change the state</button>
+            <br />
+            <br />
+
+            <button onClick={() => this.state.breed = 'Doggo'}>Change state to Doggo</button>
+            <button onClick={() => this.state.breed = 'Lab'}>Change state to Lab</button>
         </div>;
     }
 };

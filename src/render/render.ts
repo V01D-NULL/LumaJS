@@ -37,27 +37,18 @@ export class Renderer {
     const { dom } = FiberEngine.rootFiber();
     root.append(dom);
 
-    // // setInterval
-    setTimeout(() => {
-      FiberEngine.update();
-      FiberEngine.setDiffingState(true);
+    setInterval(() => {
+      const start = performance.now();
 
-      // This is where the diffing algorithm will run.
-      // It will check each component and compare it against the shadow DOM in the fibers. If there are any differences, it will update the real DOM
       const rootComponent = getComponentClassInstance(this.root_component);
-      this.craftVirtualComponent(rootComponent.render());
+      const newRoot = this.craftVirtualComponent(rootComponent.render());
 
-      const { dom } = FiberEngine.rootFiber();
-      root.append(dom);
+      root.innerHTML = "";
+      root.append(newRoot);
 
-      const originalFiber = FiberEngine.getFibers(); // This is the original fiber
-      const newFiber = FiberEngine.getDiffingFibers(); // This fiber was just created
-
-      const diff = diffFibers(originalFiber, newFiber);
-      console.log("DIFF: ", diff);
-
-      FiberEngine.setDiffingState(false);
-    }, 3000);
+      const end = performance.now();
+      console.log(`Execution time: ${end - start} ms`);
+    }, 420);
   };
 
   // Generate a virtual dom component

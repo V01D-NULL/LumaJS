@@ -9,7 +9,6 @@ export interface IFiber {
 }
 
 export namespace FiberEngine {
-  const watchedFibers: Array<IFiber> = []; // Todo: Priority queue
   const fibers: Array<IFiber> = []; // Todo: linked list
 
   let diffingState: boolean = false;
@@ -23,6 +22,10 @@ export namespace FiberEngine {
     return diffingFibers;
   };
 
+  // export const applyFibers = (): void => {
+  //   fibers.length = 0;
+  // };
+
   export const addFiber = (fiber: IFiber): void => {
     // Initialize the fiber with a hash and observable (auto-tracking)
     if (!fiber?.hash) {
@@ -33,12 +36,6 @@ export namespace FiberEngine {
 
     // Save to generic fiber list
     fibers.push(fiber);
-
-    // Start tracking this fiber if it has a watchable property
-    if (fiber.state) {
-      console.log("listening to fiber #", fiber);
-      watchedFibers.push(fiber);
-    }
   };
 
   export const getFibers = (): Array<IFiber> => {
@@ -51,37 +48,10 @@ export namespace FiberEngine {
 
   export const setDiffingState = (state: boolean): void => {
     diffingState = state;
+    if (!state) diffingFibers.length = 0;
   };
 
   export const getDiffingState = (): boolean => {
     return diffingState;
   };
-
-  export const update = (): Array<IFiber> | void => {
-    if (watchedFibers.length > 0) {
-      return processFiber();
-    }
-  };
-
-  const processFiber = (): Array<IFiber> => {
-    const fibersToUpdate = watchedFibers.reduce((prev: any, curr: any) => {
-      if (fiberNeedsUpdate(curr)) {
-        const newHash = hashCode(JSON.stringify(curr));
-        curr = { ...curr, hash: newHash };
-
-        console.log("(new) Preparing to update fiber #", curr.hash);
-        return [...prev, curr];
-      }
-    }, []);
-
-    return fibersToUpdate ?? [];
-  };
-
-  const fiberNeedsUpdate = (originalFiber: IFiber): boolean => {
-    const oldHash = originalFiber.hash;
-    const newHash = hashCode(JSON.stringify(originalFiber));
-    return oldHash !== newHash;
-  };
 }
-
-// export default FiberEngine;

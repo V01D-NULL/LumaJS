@@ -40,10 +40,18 @@ class Dom {
      */
     if (typeof component === "function") {
       let patchedComponent: IVirtualDomComponent;
-      const isClass = (<any>component).prototype instanceof Component;
+      const isClass = (component as any).prototype instanceof Component;
 
       if (isClass) {
         const instance = getComponentClassInstance(component);
+
+        if ((component as any).prototype?.deprecated) {
+          console.warn(
+            (component as any).prototype.constructor.name,
+            "is deprecated. Use of this component is ill-advised"
+          );
+        }
+
         instance.props = props;
         patchedComponent = instance?.render();
       } else {
@@ -63,34 +71,34 @@ class Dom {
       eventListeners: onClick,
     };
 
-    if (FiberEngine.getDiffingState()) {
-      // const existingFibers = FiberEngine.getFibers();
-      // existingFibers.forEach((fiber: any) => {
-      //   let tmpFiber: IFiber = {
-      //     domComponent,
-      //     dom: this.renderer.craftVirtualComponent(domComponent),
-      //   };
+    // if (FiberEngine.getDiffingState()) {
+    // const existingFibers = FiberEngine.getFibers();
+    // existingFibers.forEach((fiber: any) => {
+    //   let tmpFiber: IFiber = {
+    //     domComponent,
+    //     dom: this.renderer.craftVirtualComponent(domComponent),
+    //   };
 
-      //   const obersvable = tmpFiber.domComponent.props?.state;
-      //   const hash = hashCode(JSON.stringify(tmpFiber));
-      //   tmpFiber = { ...tmpFiber, hash, state: obersvable };
+    //   const obersvable = tmpFiber.domComponent.props?.state;
+    //   const hash = hashCode(JSON.stringify(tmpFiber));
+    //   tmpFiber = { ...tmpFiber, hash, state: obersvable };
 
-      //   if (tmpFiber.hash === fiber.hash) {
-      //     console.log("Fiber already exists");
-      //     return;
-      //   }
+    //   if (tmpFiber.hash === fiber.hash) {
+    //     console.log("Fiber already exists");
+    //     return;
+    //   }
 
-      //   // console.log("tmpFiber", tmpFiber);
-      //   // console.log("fiber", fiber);
-      // });
+    //   // console.log("tmpFiber", tmpFiber);
+    //   // console.log("fiber", fiber);
+    // });
 
-      FiberEngine.addFiberToDiff({
-        domComponent,
-        dom: this.renderer.craftVirtualComponent(domComponent),
-      });
+    //   FiberEngine.addFiberToDiff({
+    //     domComponent,
+    //     dom: this.renderer.craftVirtualComponent(domComponent),
+    //   });
 
-      return domComponent;
-    }
+    //   return domComponent;
+    // }
 
     FiberEngine.addFiber({
       domComponent,

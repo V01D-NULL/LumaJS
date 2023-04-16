@@ -1,22 +1,30 @@
 import { IFiber } from "../render/fiber/fibers";
+import hashCode from "./hash-code";
 
 // Util to help generate a diff between two fibers
 export const diffFibers = (
   oldFibers: Array<IFiber>,
   newFibers: Array<IFiber>
 ): Array<IFiber> => {
-  // TODO: This needs to diff *everything* in the fiber, not just the hash
   const diff: Array<IFiber> = [];
 
-  oldFibers.forEach((oldFiber: IFiber) => {
-    const newFiber = newFibers.find(
-      (fiber: IFiber) => fiber.hash === oldFiber.hash
-    );
+  for (let i in oldFibers) {
+    const oldHash = hashCode(JSON.stringify(oldFibers[i].domComponent));
+    const newHash = hashCode(JSON.stringify(newFibers[i].domComponent));
 
-    if (!newFiber) {
-      diff.push(oldFiber);
+    if (oldHash !== newHash) diff.push(newFibers[i]);
+  }
+
+  const differentLength = newFibers.length !== oldFibers.length;
+  if (differentLength) {
+    // const smaller = newFibers.length < oldFibers.length ? newFibers : oldFibers;
+
+    if (newFibers.length < oldFibers.length) {
+      console.log("new fiber is smaller", oldFibers.slice(newFibers.length));
+    } else {
+      console.log("old fiber is smaller", newFibers.slice(oldFibers.length));
     }
-  });
+  }
 
   return diff;
 };
