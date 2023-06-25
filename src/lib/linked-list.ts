@@ -103,12 +103,7 @@ export class LinkedList<T> {
     return true;
   }
 
-  // Add the element at the beginning of the linked list
-  prepend(
-    val: T,
-    customLogic = false,
-    checkDuplicates: boolean = false
-  ): boolean {
+  prepend(val: T, checkDuplicates: boolean = false): boolean {
     if (checkDuplicates && this.isDuplicate(val)) {
       return false;
     }
@@ -120,35 +115,12 @@ export class LinkedList<T> {
     } else {
       newItem.next = this._head;
       this._head.prev = newItem;
-      if (customLogic) {
-        (newItem as any).return = (this._head as any).return;
-        (this._head as any).return = newItem;
-      }
       this._head = newItem;
     }
 
     this._length++;
     return true;
   }
-
-  //   prepend(val: T, checkDuplicates: boolean = false): boolean {
-  //     if (checkDuplicates && this.isDuplicate(val)) {
-  //       return false;
-  //     }
-
-  //     let newItem = new LinkedListItem<T>(val);
-
-  //     if (!this._head) {
-  //       this._head = this._tail = newItem;
-  //     } else {
-  //       newItem.next = this._head;
-  //       this._head.prev = newItem;
-  //       this._head = newItem;
-  //     }
-
-  //     this._length++;
-  //     return true;
-  //   }
 
   remove(val: T): T | void {
     let currentItem = this._head;

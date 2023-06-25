@@ -3,10 +3,9 @@ import { retrieveActiveFibers } from "../scheduler/sched";
 type UseState<S> = [S, (newValue: S) => void];
 
 function useState<S>(initialState: S): UseState<S> {
-  console.log("THIS", this);
-  //   let state = initialState;
+  let state = initialState;
   const setState = (newValue: S) => {
-    // state = newValue;
+    state = newValue;
     console.log(
       "Fibers subscribed to this hook:",
       newValue,
