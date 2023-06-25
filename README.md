@@ -1,8 +1,5 @@
 ### Framework
 
-This is just a simple javascript framework inspired by react, ember, and whatever else I can get my hands on.
+Ever since I learned about React's fiber reconciler, I had to know how it worked.
 
-TODO:
-
-- Implement states for classes
-- [Tag](https://www.pzuraq.com/blog/how-autotracking-works) components to figure out if they need to be rerendered (and updated in the cache)
+What better way to learn about the internals of software than recreate it after reading TONS of documentation and code? :D
