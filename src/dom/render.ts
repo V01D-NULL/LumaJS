@@ -21,7 +21,7 @@ function createElement(
   props?: HTMLElement,
   ...children: Array<VirtualElement>
 ) {
-  // Invoking component will trigger createElement on valid DOM nodes inside of functional components
+  // Invoking component will trigger createElement on valid JSX inside of functional components
   if (typeof component === "function") {
     if (!appLayout) appLayout = component; // Store the root component on the first render
     return component();
