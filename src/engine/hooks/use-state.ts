@@ -1,18 +1,24 @@
-import { retrieveActiveFibers } from "../scheduler/sched";
+import {
+  gfibs,
+  retrieveActiveFibers,
+  retrieveWorkInProgressFiber,
+} from "../scheduler/sched";
 
 type UseState<S> = [S, (newValue: S) => void];
 
 function useState<S>(initialState: S): UseState<S> {
-  let state = initialState;
   const setState = (newValue: S) => {
-    state = newValue;
     console.log(
       "Fibers subscribed to this hook:",
       newValue,
-      //   subscribedFibers.toArray(),
-      retrieveActiveFibers()?.toArray()
+      retrieveActiveFibers().toArray(),
+      retrieveWorkInProgressFiber()
     );
   };
+
+  const fiber = retrieveWorkInProgressFiber();
+  fiber.memoizedState = initialState;
+  fiber.hookQueue.push(setState);
 
   return [initialState, setState];
 }

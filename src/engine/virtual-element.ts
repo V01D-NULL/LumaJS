@@ -1,3 +1,5 @@
+import { Fiber } from "./fibers/fiber-type";
+
 class VirtualElement {
   element: string = "root";
   children: any;
@@ -5,18 +7,20 @@ class VirtualElement {
 
   private _internal: {
     topLevelComponent: Function;
+    owner: Fiber;
   };
   // updater (used by hooks in setState())
 
   constructor(
-    elem: string | Function,
+    elem: string,
     children: Array<VirtualElement> | undefined,
     attributes: HTMLElement | undefined,
-    topLevel: NonNullable<Function>
+    topLevel: NonNullable<Function>,
+    owner: NonNullable<Fiber>
   ) {
     // if (typeof elem === "function") this.__rootComponent = elem;
     // else this.element = elem;
-    this.element = elem as string;
+    this.element = elem;
 
     if (children) this.children = children;
     if (attributes) this.attributes = attributes;
@@ -26,7 +30,8 @@ class VirtualElement {
     // (aka perform reconciliation with createElement)
     // console.log("TOP", topLevel);
 
-    this._internal = { topLevelComponent: topLevel };
+    this._internal = { topLevelComponent: topLevel, owner };
+    if (owner) owner.node = this;
   }
 
   get reconcile(): VirtualElement {

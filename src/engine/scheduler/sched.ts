@@ -6,8 +6,24 @@ const Fibers: FiberTrees = {
   WorkInProgress: null,
 };
 
-function addFiber(fiber: Fiber) {
+const fibs = new LinkedList();
+
+function addFiber(fiber: any) {
+  // console.log("new", fiber);
   Fibers.Active.prepend(fiber);
+  // console.log(Fibers.Active.toArray(), "---", fiber);
+
+  // fibs.prepend(fiber);
+
+  Fibers.WorkInProgress = null;
+}
+
+function addWorkInProgressFiber(fiber: Fiber) {
+  Fibers.WorkInProgress = fiber;
+}
+
+function retrieveWorkInProgressFiber() {
+  return Fibers.WorkInProgress;
 }
 
 function registerActiveFibers(fiber: FiberTree) {
@@ -15,7 +31,20 @@ function registerActiveFibers(fiber: FiberTree) {
 }
 
 function retrieveActiveFibers() {
+  // console.log(Fibers.Active);
+  // return fibs;
   return Fibers.Active;
 }
 
-export { registerActiveFibers, retrieveActiveFibers, addFiber };
+function gfibs() {
+  return fibs.toArray();
+}
+
+export {
+  registerActiveFibers,
+  retrieveActiveFibers,
+  addFiber,
+  addWorkInProgressFiber,
+  retrieveWorkInProgressFiber,
+  gfibs,
+};

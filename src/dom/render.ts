@@ -1,53 +1,49 @@
 import { Fiber, createFiber } from "../engine/fibers/index";
-import { addFiber, retrieveActiveFibers } from "../engine/scheduler/sched";
+import {
+  addFiber,
+  addWorkInProgressFiber,
+  gfibs,
+  retrieveActiveFibers,
+  retrieveWorkInProgressFiber,
+} from "../engine/scheduler/sched";
 import { VirtualElement } from "../engine/virtual-element";
-
-let appLayout: Function;
+import { LinkedList } from "../lib/linked-list";
 
 function render(layout: Fiber, root: Element) {
-  root.append(perform(layout));
-
-  // setTimeout(() => {
-  //   if (init) return;
-  //   init = true;
-  //   console.log("recall render");
-  //   // console.log("APP LAYOUT", retrieveActiveFibers()?.head?.element.reconcile);
-  // }, 1000);
+  root.append(perform(layout.node));
+  // console.log(retrieveActiveFibers().toArray());
 }
 
-// Used by babel
 function createElement(
   component: string | Function,
   props?: HTMLElement,
   ...children: Array<VirtualElement>
 ) {
-  // Invoking component will trigger createElement on valid DOM nodes inside of functional components
+  const list: LinkedList<Fiber> = retrieveActiveFibers();
+
+  const fiber = createFiber(
+    typeof component === "function" ? component.name : component,
+    props,
+    children
+  );
+  addWorkInProgressFiber(fiber);
+
   if (typeof component === "function") {
-    if (!appLayout) appLayout = component; // Store the root component on the first render
-    return component();
+    fiber.node.children.push(component(props).node);
+  } else {
+    fiber.node.children = children;
   }
 
-  const virtualElement = new VirtualElement(
-    component,
-    children.filter((x) => x !== null && x !== undefined),
-    props,
-    appLayout
-  );
-
-  const { head } = retrieveActiveFibers();
-  const fiber = createFiber();
-  fiber.type = virtualElement;
-
-  if (head) {
-    head.return = fiber;
+  if (list.head) {
+    list.head.return = fiber;
   }
 
   addFiber(fiber);
   return fiber;
 }
 
-function perform(fiber: Fiber) {
-  const { element, children, attributes } = fiber.type;
+function perform(fiber: VirtualElement) {
+  const { element, children, attributes } = fiber;
   const htmlElement = document.createElement(element);
 
   const attributeKeys = Object.keys(attributes ?? {});
@@ -66,7 +62,11 @@ function perform(fiber: Fiber) {
   });
 
   children?.forEach((child: string | any): void => {
-    let childComponent = typeof child !== "object" ? child : perform(child);
+    let childComponent =
+      typeof child !== "object"
+        ? child
+        : perform(child.node ? child.node : child); // Sometimes children are either type Fiber or VirtualElement. I could dig deeper and fix it but this works fine.
+
     htmlElement.append(childComponent);
   });
 

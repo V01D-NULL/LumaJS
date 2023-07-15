@@ -17,27 +17,28 @@ const MyComponent = () => {
     )
 }
 
+function Foo() {
+    const [_, setState] = useState('nay');
+    return <div className='__foo__'>
+        <p onClick={() => setState('yan')}>
+            a
+        </p>
+    </div>
+}
+
 function App() {    // App
     const [_, setState] = useState(0);
 
     return (
-        <div className="wrapper">
-            <button onClick={() => setState(1)}>
-                <p>Weee</p>
-            </button>
-            {/* <div className="list">
-                <div className="list_item_A">List item A</div>
-                <div className="list_item_B">List item B</div>
-            </div>
-            <div className="section">
-                <button className="section_B">Add</button>
-                <span className="section_S">No. of items: 2</span>
-            </div>
-    */}
-            {/* <MyComponent /> */}
+        <div className='__app__'>
+            {/* <button onClick={() => setState(1)}>App</button>
+            <p>p tag</p> */}
+            <Foo />
         </div>
-    );
+    )
 }
 
+
+// console.log(<App />);
 
 Framework.render(<App />, document.querySelector("#app-root"));
