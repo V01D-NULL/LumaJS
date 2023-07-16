@@ -10,6 +10,7 @@ type FiberTree = LinkedList<Fiber>;
 interface FiberTrees {
   Active: FiberTree | null;
   WorkInProgress: Fiber | null;
+  RecentlyUsed: Fiber | null;
 }
 
 type Fiber = {

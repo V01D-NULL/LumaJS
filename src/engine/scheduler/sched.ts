@@ -4,22 +4,15 @@ import { Fiber, FiberTree, FiberTrees } from "../fibers/fiber-type";
 const Fibers: FiberTrees = {
   Active: new LinkedList<Fiber>(),
   WorkInProgress: null,
+  RecentlyUsed: null,
 };
 
-const fibs = new LinkedList();
-
 function addFiber(fiber: any) {
-  // console.log("new", fiber);
   Fibers.Active.prepend(fiber);
-  // console.log(Fibers.Active.toArray(), "---", fiber);
-
-  // fibs.prepend(fiber);
-
-  Fibers.WorkInProgress = null;
 }
 
 function addWorkInProgressFiber(fiber: Fiber) {
-  Fibers.WorkInProgress = fiber;
+  Fibers.WorkInProgress ??= fiber;
 }
 
 function retrieveWorkInProgressFiber() {
@@ -31,20 +24,23 @@ function registerActiveFibers(fiber: FiberTree) {
 }
 
 function retrieveActiveFibers() {
-  // console.log(Fibers.Active);
-  // return fibs;
   return Fibers.Active;
 }
 
-function gfibs() {
-  return fibs.toArray();
+function addRecentlyUsedFiber(fiber: Fiber) {
+  Fibers.RecentlyUsed = fiber;
+}
+
+function retrieveRecentlyUsedFiber() {
+  return Fibers.RecentlyUsed;
 }
 
 export {
+  addFiber,
+  addRecentlyUsedFiber,
+  addWorkInProgressFiber,
   registerActiveFibers,
   retrieveActiveFibers,
-  addFiber,
-  addWorkInProgressFiber,
   retrieveWorkInProgressFiber,
-  gfibs,
+  retrieveRecentlyUsedFiber,
 };

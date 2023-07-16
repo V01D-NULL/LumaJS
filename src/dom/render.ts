@@ -1,8 +1,8 @@
 import { Fiber, createFiber } from "../engine/fibers/index";
 import {
   addFiber,
+  addRecentlyUsedFiber,
   addWorkInProgressFiber,
-  gfibs,
   retrieveActiveFibers,
   retrieveWorkInProgressFiber,
 } from "../engine/scheduler/sched";
@@ -11,7 +11,7 @@ import { LinkedList } from "../lib/linked-list";
 
 function render(layout: Fiber, root: Element) {
   root.append(perform(layout.node));
-  // console.log(retrieveActiveFibers().toArray());
+  console.log(retrieveWorkInProgressFiber());
 }
 
 function createElement(
@@ -27,6 +27,7 @@ function createElement(
     children
   );
   addWorkInProgressFiber(fiber);
+  addRecentlyUsedFiber(fiber);
 
   if (typeof component === "function") {
     fiber.node.children.push(component(props).node);

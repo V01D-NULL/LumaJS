@@ -1,6 +1,6 @@
 import {
-  gfibs,
   retrieveActiveFibers,
+  retrieveRecentlyUsedFiber,
   retrieveWorkInProgressFiber,
 } from "../scheduler/sched";
 
@@ -16,7 +16,7 @@ function useState<S>(initialState: S): UseState<S> {
     );
   };
 
-  const fiber = retrieveWorkInProgressFiber();
+  const fiber = retrieveRecentlyUsedFiber();
   fiber.memoizedState = initialState;
   fiber.hookQueue.push(setState);
 
