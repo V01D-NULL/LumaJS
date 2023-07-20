@@ -1,48 +1,44 @@
-import Framework, { FrameworkDOM } from '../../src/index.js'
+import { Framework } from '../../src/index.js'
+const { useState } = Framework;
 
-class NotApp extends Framework.Component {
-    render() {
-        return <div> Hello, I'm defintely not app but I am rendered inside of it.
-            <div>
-                Here are two props that have been passed to a class instead of a function:
-                "{this.props.foo}" and "{this.props.bar}"
-            </div>
-        </div>;
-    }
+const MyComponent = () => {
+    const [show, setShow] = useState(false);
+    const [counter, setCounter] = useState(0);
+
+    return (
+        <div>
+            <button onClick={() => setShow(true)}>Change state</button>
+            {show && <p>I'm showing now!</p>}
+            <br />
+            <br />
+            <button onClick={() => setCounter(counter + 1)}>Increment</button>
+            Counter: {counter}
+        </div>
+    )
 }
 
-class App extends Framework.Component {
-    constructor() {
-        super();
-        this.state = { breed: 'Golden Retriever' };
-    }
+function Foo() {
+    const [_, setState] = useState('nay');
+    return <div className='__foo__'>
+        <p onClick={() => setState('yan')}>
+            a
+        </p>
+    </div>
+}
 
-    SpaceDoggo(props) {
-        return <div>This is my custom nested component: space doggo 🐶. Props: {props.bark}</div>;
-    }
+function App() {    // App
+    const [_, setState] = useState(0);
 
-    render() {
-        return <div>
-            <p>This is a p tag inside of a div.</p>
-            <hr />
+    return (
+        <div className='__app__'>
+            {/* <button onClick={() => setState(1)}>App</button>
+            <p>p tag</p> */}
+            <Foo />
+        </div>
+    )
+}
 
-            There is also support for nested components:
-            <this.SpaceDoggo bark={'Woof'}></this.SpaceDoggo>
-            <hr />
 
-            There is primitive support (WIP) for states:
-            <br />
-            Space doggo is a {this.state.breed}
+// console.log(<App />);
 
-            <hr />
-            Last but not least you can render a class the inherits from Framework.Component and has a render function:
-            <br />
-            <NotApp foo={'This is a prop named \'foo\''} bar={'This is a prop named \'bar\''}></NotApp>
-
-            <hr />
-        </div>;
-    }
-};
-
-const root = FrameworkDOM.createRoot(document.querySelector("#app-root"));
-root.render(App, document.querySelector("#app-root"));
+Framework.render(<App />, document.querySelector("#app-root"));
