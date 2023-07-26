@@ -1,3 +1,4 @@
+import { Queue } from "../../lib/queue";
 import { VirtualElement } from "../virtual-element";
 import { Fiber } from "./fiber-type";
 
@@ -6,8 +7,8 @@ function createFiber(elem, props, children): Fiber {
     type: elem,
     functionalComponent: null,
     return: null,
-    hookQueue: [],
-    memoizedState: null,
+    hookQueue: new Queue(),
+    memoizedState: new Queue(),
     node: new VirtualElement(
       elem,
       children.filter((x) => x !== null && x !== undefined),

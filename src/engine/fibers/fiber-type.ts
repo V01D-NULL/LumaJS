@@ -1,4 +1,5 @@
 import { LinkedList } from "../../lib/linked-list";
+import { Queue } from "../../lib/queue";
 import { VirtualElement } from "../virtual-element";
 
 type Dispatcher<A> = (...args: any[]) => A | void;
@@ -17,8 +18,8 @@ type Fiber = {
   type: string | null;
   functionalComponent: string | null;
   return: Fiber | null;
-  hookQueue: Dispatcher<Function>[];
-  memoizedState: any;
+  hookQueue: Queue<Dispatcher<Function>>;
+  memoizedState: Queue<unknown>;
   node: VirtualElement;
 };
 
