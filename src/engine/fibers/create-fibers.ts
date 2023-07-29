@@ -1,21 +1,14 @@
 import { Queue } from "../../lib/queue";
-import { VirtualElement } from "../virtual-element";
-import { Fiber } from "./fiber-type";
+import { FiberFlags } from "./fiber-flags";
 
-function createFiber(elem, props, children): Fiber {
+function createFiber(elem, props, children): any {
   return {
     type: elem,
-    functionalComponent: null,
-    return: null,
+    flags: FiberFlags.NONE,
+    children: children.filter((x) => x !== null && x !== undefined),
     hookQueue: new Queue(),
-    memoizedState: new Queue(),
-    node: new VirtualElement(
-      elem,
-      children.filter((x) => x !== null && x !== undefined),
-      props,
-      null,
-      null
-    ),
+    memoizedState: [],
+    attributes: props ?? {},
   };
 }
 

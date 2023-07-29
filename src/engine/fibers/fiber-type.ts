@@ -1,26 +1,35 @@
-import { LinkedList } from "../../lib/linked-list";
+import { LinkedList, LinkedListItem } from "../../lib/linked-list";
 import { Queue } from "../../lib/queue";
-import { VirtualElement } from "../virtual-element";
+import { FiberFlags } from "./fiber-flags";
 
 type Dispatcher<A> = (...args: any[]) => A | void;
 
-// Individual fiber tree
-type FiberTree = LinkedList<Fiber>;
-
-// Collection of fiber tree's
 interface FiberTrees {
-  Active: FiberTree | null;
+  Active: Fiber | null;
   WorkInProgress: Fiber | null;
   RecentlyUsed: Fiber | null;
 }
 
-type Fiber = {
-  type: string | null;
-  functionalComponent: string | null;
-  return: Fiber | null;
-  hookQueue: Queue<Dispatcher<Function>>;
+enum EffectTag {
+  UPDATE = 1 << 0,
+}
+
+type Effect = {
+  effectTag: EffectTag;
+  type: string;
+  domNode: HTMLElement;
+  memoizedProps: Queue<unknown>;
   memoizedState: Queue<unknown>;
-  node: VirtualElement;
 };
 
-export { Fiber, FiberTree, FiberTrees };
+type Fiber = {
+  type: string | Function | null;
+  flags: FiberFlags;
+  children: Fiber[] | null;
+  firstEffect?: LinkedList<Effect>;
+  hookQueue: Queue<Dispatcher<Function>>;
+  memoizedState: any[];
+  attributes: HTMLElement | null;
+};
+
+export { Fiber, FiberTrees };

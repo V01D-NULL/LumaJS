@@ -1,51 +1,38 @@
-import { Fiber, createFiber } from "../engine/fibers/index";
-import {
-  addFiber,
-  addRecentlyUsedFiber,
-  addWorkInProgressFiber,
-  retrieveActiveFibers,
-  retrieveWorkInProgressFiber,
-} from "../engine/scheduler/sched";
-import { VirtualElement } from "../engine/virtual-element";
-import { LinkedList } from "../lib/linked-list";
+import { Fiber } from "../engine/fibers/index";
+import { buildFiberTree } from "../engine/fibers/build";
+import { setCurrentHook } from "../engine/hooks/use-state";
+import { logDebug } from "../engine/dev/log-debug";
 
-function render(layout: Fiber, root: Element) {
-  root.append(perform(layout.node));
-  console.log(retrieveWorkInProgressFiber());
-}
+let isInitialRender = true;
 
-function createElement(
-  component: string | Function,
-  props?: HTMLElement,
-  ...children: Array<VirtualElement>
-) {
-  const list: LinkedList<Fiber> = retrieveActiveFibers();
+let currentRoot = null;
+let currentElement = null;
 
-  const fiber = createFiber(
-    typeof component === "function" ? component.name : component,
-    props,
-    children
-  );
-  addWorkInProgressFiber(fiber);
-  addRecentlyUsedFiber(fiber);
-
-  if (typeof component === "function") {
-    fiber.node.children.push(component(props).node);
-  } else {
-    fiber.node.children = children;
+function render(element, container) {
+  if (!isInitialRender) {
+    console.error("render method has already been called");
+    return;
   }
 
-  if (list.head) {
-    list.head.return = fiber;
-  }
+  setCurrentHook(0);
+  currentRoot = container;
+  currentElement = element;
 
-  addFiber(fiber);
-  return fiber;
+  container.appendChild(paint(buildFiberTree(element)));
+  isInitialRender = false;
+  logDebug("Fiber root", currentElement);
 }
 
-function perform(fiber: VirtualElement) {
-  const { element, children, attributes } = fiber;
-  const htmlElement = document.createElement(element);
+function reRender(element = currentElement) {
+  setCurrentHook(0);
+  currentElement = element;
+
+  currentRoot.replaceChildren(paint(buildFiberTree(element)));
+}
+
+function paint(fiber: Fiber) {
+  const { type, children, attributes } = fiber;
+  const htmlElement = document.createElement(type as any);
 
   const attributeKeys = Object.keys(attributes ?? {});
 
@@ -63,15 +50,11 @@ function perform(fiber: VirtualElement) {
   });
 
   children?.forEach((child: string | any): void => {
-    let childComponent =
-      typeof child !== "object"
-        ? child
-        : perform(child.node ? child.node : child); // Sometimes children are either type Fiber or VirtualElement. I could dig deeper and fix it but this works fine.
-
+    const childComponent = typeof child !== "object" ? child : paint(child);
     htmlElement.append(childComponent);
   });
 
   return htmlElement;
 }
 
-export { render, createElement };
+export { render, reRender };

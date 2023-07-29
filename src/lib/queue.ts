@@ -19,6 +19,11 @@ export class Queue<T> {
     return this.size === 0;
   }
 
+  // Find 'val' and return index
+  find(val: T): number {
+    return this.queue.findIndex((x) => val === x);
+  }
+
   get size() {
     return this.queue.length;
   }

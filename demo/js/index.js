@@ -1,32 +1,40 @@
 import { Framework } from "../../src/index.js";
 const { useState } = Framework;
 
-function Foo() {
-  const [fooState, setFooState] = useState("nay");
-  return (
-    <div className="__foo__">
-      <button onClick={() => setFooState("yan")}>
-        Nested use state hook in Foo component
-      </button>
-    </div>
-  );
-}
+function TextComponent() {
+  const [text, _] = useState(["hi", "hello", "hey"]);
+  const [textIndex, setTextIndex] = useState(0);
 
-function App() {
-  // Two or more useState hooks can be distinguished on a single component
-  const [counter, setCounter] = useState(0);
-  const [bool, setBool] = useState(false);
+  const updateIndex = () => {
+    if (textIndex === 2) {
+      setTextIndex(0);
+      return;
+    }
+    setTextIndex(textIndex + 1);
+  };
 
   return (
     <div>
-      <button onClick={() => setBool(true)}>Set boolean to true</button>
-      <br />
-      <button onClick={() => setCounter(counter + 1)}>Counter++</button>
-      <br />
-      {counter}
-      <Foo />
+      <button onClick={updateIndex}>Click</button>
+      {text[textIndex]}
     </div>
   );
 }
 
+// Your App component
+function App() {
+  const [counter, setCounter] = useState(0);
+
+  return (
+    <div>
+      <button onClick={() => setCounter(counter + 1)}>Counter++</button>
+      <button onClick={() => setCounter(counter - 1)}>Counter--</button>
+      <p>Counter {counter}</p>
+      <br />
+      <TextComponent />
+    </div>
+  );
+}
+
+// Render the App component.
 Framework.render(<App />, document.querySelector("#app-root"));

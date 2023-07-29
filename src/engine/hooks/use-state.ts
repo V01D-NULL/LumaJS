@@ -1,28 +1,42 @@
-import { retrieveRecentlyUsedFiber } from "../scheduler/sched";
-import {
-  getHookOwner,
-  mapHookToOwner,
-} from "./internal/hook-component-mapping";
+// import { reRender } from "../../dom/render";
+// import { FiberFlags, markFiberFlags } from "../fibers/fiber-flags";
+// import {
+//   retrieveActiveFibers,
+//   retrieveRecentlyUsedFiber,
+//   retrieveWorkInProgressFiber,
+// } from "../fibers/fibers";
+import { reconcile } from "../reconciler/reconciler";
+import { scheduleWork } from "../scheduler/sched";
 
 type UseState<S> = [S, (newValue: S) => void];
 
-function useState<S>(initialState: S): UseState<S> {
-  const setState = (newValue: S) => {
-    const { owner, queuePosition } = getHookOwner(setState);
-    const state = owner.memoizedState.raw.at(queuePosition);
+let hooks = [];
+let currentHook = 0;
 
-    console.log("Owner of this setState callback:", owner);
-    console.log(`Changing value from ${state} to ${newValue}`);
-  };
-
-  const fiber = retrieveRecentlyUsedFiber();
-  fiber.memoizedState.enqueue(initialState);
-  const hookQueuePosition = fiber.hookQueue.enqueue(setState);
-
-  // Associate this setState callback with the current fiber
-  mapHookToOwner(setState, { queuePosition: hookQueuePosition, owner: fiber });
-
-  return [initialState, setState];
+function setCurrentHook(val) {
+  currentHook = val;
 }
 
-export { useState };
+function getCurrentHook() {
+  return currentHook;
+}
+
+function getHooks() {
+  return hooks;
+}
+
+function useState<S>(initialValue: S): UseState<S> {
+  if (typeof hooks[currentHook] === "undefined") {
+    hooks[currentHook] = initialValue;
+  }
+
+  let hookIndex = currentHook;
+  function setState(newValue) {
+    hooks[hookIndex] = newValue;
+    requestIdleCallback(scheduleWork);
+  }
+
+  return [hooks[currentHook++], setState];
+}
+
+export { useState, setCurrentHook, getCurrentHook, getHooks };

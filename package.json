@@ -8,6 +8,9 @@
     "build": "tsc --build",
     "serve": "npx parcel demo/index.html",
     "watch": "watch 'npm run build' ./src",
-    "dev": "npm run serve& watch 'npm run build' ./src"
+    "dev": "npm run serve& watch 'NODE_ENV=development npm run build' ./src"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-define": "^2.1.3"
   }
 }
