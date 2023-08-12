@@ -1,42 +1,44 @@
-// import { reRender } from "../../dom/render";
-// import { FiberFlags, markFiberFlags } from "../fibers/fiber-flags";
-// import {
-//   retrieveActiveFibers,
-//   retrieveRecentlyUsedFiber,
-//   retrieveWorkInProgressFiber,
-// } from "../fibers/fibers";
-import { reconcile } from "../reconciler/reconciler";
+import { logDebug } from "../dev/log-debug";
+import { retrieveWorkInProgressFiber } from "../fibers/fibers";
 import { scheduleWork } from "../scheduler/sched";
+import { advanceToNextHook, getCurrentHookIdx } from "./hooks";
 
 type UseState<S> = [S, (newValue: S) => void];
 
-let hooks = [];
-let currentHook = 0;
-
-function setCurrentHook(val) {
-  currentHook = val;
-}
-
-function getCurrentHook() {
-  return currentHook;
-}
-
-function getHooks() {
-  return hooks;
-}
-
 function useState<S>(initialValue: S): UseState<S> {
-  if (typeof hooks[currentHook] === "undefined") {
-    hooks[currentHook] = initialValue;
+  const wip = retrieveWorkInProgressFiber();
+
+  // The actual component will run a hook function, so we can return some basic data and quit
+  // for now since the framework has not even run yet, thus there is no real data to work with
+  if (wip === null) {
+    logDebug(
+      "Ignoring null wip fiber - this is likely an initial render",
+      initialValue
+    );
+    return [initialValue, setState];
   }
 
-  let hookIndex = currentHook;
-  function setState(newValue) {
-    hooks[hookIndex] = newValue;
+  // createElement will call this function while traversing it, but at that point we also set the wip fiber
+  // This is a very hack way of stopping createElement from tricking the hook into thinking there are more hooks in the component
+  if (new Error().stack.includes("createElement")) {
+    logDebug("Ignoring hook invocation from createElement");
+    return [initialValue, setState];
+  }
+
+  const hooks = wip.hooks;
+  const currentHook = getCurrentHookIdx();
+
+  if (typeof hooks[currentHook] === "undefined") {
+    wip.hooks[currentHook] = initialValue;
+  }
+
+  function setState(newValue: S) {
+    wip.hooks[currentHook] = newValue;
     requestIdleCallback(scheduleWork);
   }
 
-  return [hooks[currentHook++], setState];
+  advanceToNextHook();
+  return [wip.hooks[currentHook], setState];
 }
 
-export { useState, setCurrentHook, getCurrentHook, getHooks };
+export { useState };

@@ -1,6 +1,6 @@
 import { Fiber } from "../engine/fibers/index";
 import { buildFiberTree } from "../engine/fibers/build";
-import { setCurrentHook } from "../engine/hooks/use-state";
+import { resetHookIdx } from "../engine/hooks/hooks";
 import { logDebug } from "../engine/dev/log-debug";
 
 let isInitialRender = true;
@@ -14,7 +14,7 @@ function render(element, container) {
     return;
   }
 
-  setCurrentHook(0);
+  resetHookIdx();
   currentRoot = container;
   currentElement = element;
 
@@ -24,7 +24,7 @@ function render(element, container) {
 }
 
 function reRender(element = currentElement) {
-  setCurrentHook(0);
+  resetHookIdx();
   currentElement = element;
 
   currentRoot.replaceChildren(paint(buildFiberTree(element)));

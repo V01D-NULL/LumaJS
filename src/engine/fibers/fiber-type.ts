@@ -28,6 +28,7 @@ type Fiber = {
   children: Fiber[] | null;
   firstEffect?: LinkedList<Effect>;
   hookQueue: Queue<Dispatcher<Function>>;
+  hooks: any[];
   memoizedState: any[];
   attributes: HTMLElement | null;
 };

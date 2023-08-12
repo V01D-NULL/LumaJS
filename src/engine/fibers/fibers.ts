@@ -1,4 +1,4 @@
-import { Fiber, FiberTrees } from "../fibers/fiber-type";
+import { Fiber, FiberTrees } from "./fiber-type";
 
 const Fibers: FiberTrees = {
   Active: null,

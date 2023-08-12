@@ -1,6 +1,6 @@
-import { logDebug } from "../dev/log-debug";
 import { createFiber } from "./create-fibers";
 import { Fiber } from "./fiber-type";
+import { addWorkInProgressFiber } from "./fibers";
 
 function buildFiberTree(element: Fiber | string | number) {
   if (typeof element === "string" || typeof element === "number") {
@@ -8,6 +8,7 @@ function buildFiberTree(element: Fiber | string | number) {
   }
 
   if (typeof element.type === "function") {
+    addWorkInProgressFiber(element);
     return buildFiberTree(element.type(element.attributes));
   }
 
