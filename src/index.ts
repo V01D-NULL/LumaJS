@@ -2,10 +2,10 @@ import { createElement } from "./dom/create-element";
 import { render } from "./dom/render";
 import { useState } from "./engine/index";
 
-const framework = {
+const luma = {
   createElement,
   render,
   useState,
 };
 
-export const Framework = new Proxy(framework, {});
+export const LumaJS = new Proxy(luma, {});

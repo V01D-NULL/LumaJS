@@ -1,4 +1,4 @@
-### Framework
+### LumaJS
 
 Ever since I learned about React's fiber reconciler, I had to know how it worked.
 

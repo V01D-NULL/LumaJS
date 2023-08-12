@@ -21,7 +21,7 @@ function useState<S>(initialValue: S): UseState<S> {
   // createElement will call this function while traversing it, but at that point we also set the wip fiber
   // This is a very hack way of stopping createElement from tricking the hook into thinking there are more hooks in the component
   if (new Error().stack.includes("createElement")) {
-    logDebug("Ignoring hook invocation from createElement");
+    // logDebug("Ignoring hook invocation from createElement");
     return [initialValue, setState];
   }
 
