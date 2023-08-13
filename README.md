@@ -19,7 +19,8 @@ npm install luma-js
 LumaJS has a similar API to React. To use it in your project:
 
 ```js
-import { render, useState } from 'lumajs';
+import LumaJS from 'luma-js';
+const { useState, render } = LumaJS;
 
 function Counter() {
   const [count, setCount] = useState(0);
@@ -40,10 +41,11 @@ State in components can be managed with the useState hook:
 
 
 ```js
-import { useState } from 'lumajs';
+import LumaJS from 'luma-js';
+const { useState, render } = LumaJS;
 
 function Example() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = LumaJS.useState(0);
 
   return (
     <div>
