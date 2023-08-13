@@ -1,6 +1,12 @@
-# LumaJS
+<h1 align="center">LumaJS</h1>
 
+<p align="center">
 LumaJS is a lightweight React framework clone created for learning purposes. It reimplements some of the core features and APIs of React but is not intended for production use.
+</p>
+
+<p align="center">
+  <img width="450" alt="luma" src="https://github.com/V01D-NULL/LumaJS/assets/58613685/2e6554ac-ec70-435d-97ee-30a46ff2e82b">
+<p/>
 
 ### Getting Started
 The recommended way to start a new LumaJS project is using npx:
