@@ -1,5 +1,5 @@
-import { LumaJS } from "../../build/index.js";
-const { useState } = LumaJS;
+import LumaJS from "../../build/index.js";
+const { useState, render } = LumaJS;
 
 function TextComponent() {
   const [text, _] = useState(["hi", "hello", "hey"]);
@@ -37,4 +37,5 @@ function App() {
 }
 
 // Render the App component.
-LumaJS.render(<App />, document.querySelector("#app-root"));
+
+render(<App />, document.querySelector("#app-root"));
