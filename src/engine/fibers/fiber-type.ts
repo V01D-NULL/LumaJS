@@ -5,11 +5,10 @@ import { FiberFlags } from "./fiber-flags";
 
 type Dispatcher<A> = (...args: any[]) => A | void;
 
-interface FiberTrees {
+type FiberTrees = {
   Active: Fiber | null;
   WorkInProgress: Fiber | null;
-  RecentlyUsed: Fiber | null;
-}
+};
 
 enum EffectTag {
   UPDATE = 1 << 0,

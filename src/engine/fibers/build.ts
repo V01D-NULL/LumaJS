@@ -1,14 +1,16 @@
 import { createFiber } from "./create-fibers";
 import { Fiber } from "./fiber-type";
-import { addWorkInProgressFiber } from "./fibers";
+import { setWorkInProgressFiber } from "./fibers";
 
-function buildFiberTree(element: Fiber | string | number) {
+function buildFiberTree(
+  element: Fiber | string | number
+): Fiber | string | number {
   if (typeof element === "string" || typeof element === "number") {
     return element;
   }
 
   if (typeof element.type === "function") {
-    addWorkInProgressFiber(element);
+    setWorkInProgressFiber(element);
     return buildFiberTree(element.type(element.attributes));
   }
 

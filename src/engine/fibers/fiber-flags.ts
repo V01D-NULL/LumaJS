@@ -3,6 +3,7 @@ import { Fiber } from "./fiber-type";
 enum FiberFlags {
   NONE = 1 << 0,
   DIRTY = 1 << 1,
+  RECONCILING = 1 << 2,
 }
 
 function markFiberFlags(fiber: Fiber, mark: FiberFlags) {

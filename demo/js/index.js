@@ -31,7 +31,7 @@ function App() {
       <button onClick={() => setCounter(counter - 1)}>Counter--</button>
       <p>Counter {counter}</p>
       <br />
-      <TextComponent />
+      {/* <TextComponent /> */}
     </div>
   );
 }

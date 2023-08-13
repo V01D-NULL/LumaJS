@@ -2,6 +2,8 @@ import { Fiber } from "../engine/fibers/index";
 import { buildFiberTree } from "../engine/fibers/build";
 import { resetHookIdx } from "../engine/hooks/hooks";
 import { logDebug } from "../engine/dev/log-debug";
+import { setActiveFiber } from "../engine/fibers/fibers";
+import { FiberFlags, unmarkFiberFlags } from "../engine/fibers/fiber-flags";
 
 let isInitialRender = true;
 
@@ -18,8 +20,10 @@ function render(element, container) {
   currentRoot = container;
   currentElement = element;
 
-  container.appendChild(paint(buildFiberTree(element)));
+  container.appendChild(paint(buildFiberTree(element) as Fiber));
   isInitialRender = false;
+
+  setActiveFiber(currentElement);
   logDebug("Fiber root", currentElement);
 }
 
@@ -27,7 +31,7 @@ function reRender(element = currentElement) {
   resetHookIdx();
   currentElement = element;
 
-  currentRoot.replaceChildren(paint(buildFiberTree(element)));
+  currentRoot.replaceChildren(paint(buildFiberTree(element) as Fiber));
 }
 
 function paint(fiber: Fiber) {
