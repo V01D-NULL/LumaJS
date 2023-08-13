@@ -1,6 +1,6 @@
 import { LinkedList, LinkedListItem } from "../../lib/linked-list";
 import { Queue } from "../../lib/queue";
-import { Source } from "../dev/source";
+import { BabelSource, Source } from "../dev/source";
 import { FiberFlags } from "./fiber-flags";
 
 type Dispatcher<A> = (...args: any[]) => A | void;
@@ -25,7 +25,7 @@ type Effect = {
 type Fiber = {
   type: string | Function | null;
   flags: FiberFlags;
-  children: Fiber[] | null;
+  children: Array<Fiber | string | number> | null;
   firstEffect?: LinkedList<Effect>;
   hookQueue: Queue<Dispatcher<Function>>;
   hooks: any[];
@@ -34,4 +34,6 @@ type Fiber = {
   _source: Source;
 };
 
-export { Fiber, FiberTrees };
+type BabelProp = HTMLElement & (BabelSource | undefined);
+
+export type { Fiber, FiberTrees, BabelProp };

@@ -4,4 +4,8 @@ type Source = {
   columnNumber: string;
 };
 
-export type { Source };
+type BabelSource = {
+  __source: Source;
+};
+
+export type { Source, BabelSource };

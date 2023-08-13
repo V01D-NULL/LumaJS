@@ -1,8 +1,9 @@
 import { createFiber } from "../engine/fibers/create-fibers";
+import { BabelProp } from "../engine/fibers/fiber-type";
 
 function createElement(
   type: string | Function,
-  props?: HTMLElement,
+  props?: BabelProp,
   ...children: Array<any>
 ) {
   const fiber = createFiber(type, props, children);

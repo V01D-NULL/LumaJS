@@ -1,22 +1,26 @@
 import { Queue } from "../../lib/queue";
 import { filterAndReturnFilteredOut } from "../../util/array";
-import { Source } from "../dev/source";
+import { BabelSource, Source } from "../dev/source";
 import { FiberFlags } from "./fiber-flags";
-import { Fiber } from "./fiber-type";
+import { BabelProp, Fiber } from "./fiber-type";
 
-function createFiber(elem, props, children): Fiber {
+function createFiber(
+  elem: string | Function,
+  props: BabelProp | HTMLElement,
+  children: Array<Fiber | string | number>
+): Fiber {
   let attributes = props;
   let debugInformation = null;
 
   // Babel passes debugging attributes to `props` alongside
   // regular HTML (JSX) attributes, so we need to filter out debug info from attributes
-  if (props?.__source !== undefined) {
+  if ("__source" in props) {
     const { filtered, filteredOut: debug } = filterAndReturnFilteredOut(
       Object.entries(props),
       ([key]) => !["__self", "__source"].includes(key)
     );
 
-    attributes = Object.fromEntries(filtered);
+    attributes = Object.fromEntries(filtered) as HTMLElement & BabelSource;
     debugInformation = Object.fromEntries(debug).__source;
   }
 
