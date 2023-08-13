@@ -1,4 +1,4 @@
-import { LumaJS } from "../../src/index.js";
+import { LumaJS } from "../../build/index.js";
 const { useState } = LumaJS;
 
 function TextComponent() {
