@@ -1,10 +1,12 @@
 {
-  "plugins": [
+  "presets": [
     [
-      "@babel/plugin-transform-react-jsx",
+      "@babel/preset-react",
       {
         "pragma": "LumaJS.createElement",
-        "throwIfNamespace": false
+        // "pragmaFrag": "DomFrag", // default is React.Fragment (only in classic runtime)
+        "throwIfNamespace": false,
+        "development": true
       }
     ]
   ]

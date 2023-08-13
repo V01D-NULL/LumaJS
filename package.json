@@ -21,7 +21,7 @@
     ],
     "types": "build/index.d.ts",
     "dependencies": {
-        "@babel/plugin-transform-react-jsx": "^7.20.7",
+        "@babel/preset-react": "^7.22.5",
         "parcel": "^2.8.2",
         "watch": "^1.0.2"
     },
