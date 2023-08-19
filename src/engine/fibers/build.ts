@@ -2,23 +2,42 @@ import { createFiber } from "./create-fibers";
 import { Fiber } from "./fiber-type";
 import { setWorkInProgressFiber } from "./fibers";
 
-function buildFiberTree(
-  element: Fiber | string | number
-): Fiber | string | number {
+function buildFiberTree(generator: Generator) {
+  let result = generator.next();
+  let lastValue;
+
+  while (!result.done) {
+    lastValue = result.value;
+    result = generator.next();
+  }
+
+  console.log(lastValue);
+
+  // If the generator has finished but there's a last yielded value, return it
+  return lastValue;
+}
+
+function* __build(element: Fiber | string | number) {
   if (typeof element === "string" || typeof element === "number") {
-    return element;
+    return yield element;
   }
 
   if (typeof element.type === "function") {
     setWorkInProgressFiber(element);
-    return buildFiberTree(element.type(element.attributes));
+    return yield* __build(element.type(element.attributes));
   }
 
-  const children = element.children.flatMap((child) =>
-    Array.isArray(child) ? child.map(buildFiberTree) : buildFiberTree(child)
-  );
+  for (let child of element.children) {
+    if (Array.isArray(child)) {
+      for (let subChild of child) {
+        yield* __build(subChild);
+      }
+    } else {
+      yield* __build(child);
+    }
+  }
 
-  return createFiber(element.type, element.attributes, children);
+  yield element;
 }
 
-export { buildFiberTree };
+export { buildFiberTree, __build };

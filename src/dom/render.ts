@@ -1,5 +1,5 @@
 import { Fiber } from "../engine/fibers/index";
-import { buildFiberTree } from "../engine/fibers/build";
+import { __build, buildFiberTree } from "../engine/fibers/build";
 import { resetHookIdx } from "../engine/hooks/hooks";
 import { logDebug } from "../engine/dev/log-debug";
 import { setActiveFiber } from "../engine/fibers/fibers";
@@ -20,7 +20,13 @@ function render(element, container) {
   currentRoot = container;
   currentElement = element;
 
-  container.appendChild(paint(buildFiberTree(element) as Fiber));
+  // [X] Step 1: Separate rendering using generator
+  // [ ] Step 2: Integrate that into requestIdleCallback
+  // [ ] Step 3: Integrate that into hooks
+  // [ ] Step 4: Reconcile
+
+  const generator = __build(element);
+  container.appendChild(paint(buildFiberTree(generator)));
   isInitialRender = false;
 
   setActiveFiber(currentElement);
@@ -31,7 +37,7 @@ function reRender(element = currentElement) {
   resetHookIdx();
   currentElement = element;
 
-  currentRoot.replaceChildren(paint(buildFiberTree(element) as Fiber));
+  // currentRoot.replaceChildren(paint(buildFiberTree(element) as Fiber));
 }
 
 function paint(fiber: Fiber) {

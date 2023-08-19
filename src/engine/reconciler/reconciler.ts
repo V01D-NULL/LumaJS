@@ -11,14 +11,14 @@ function reconcile() {
   resetHookIdx();
   markFiberFlags(WorkInProgress, FiberFlags.RECONCILING);
 
-  const newVdom = buildFiberTree(WorkInProgress) as Fiber;
+  // const newVdom = buildFiberTree(WorkInProgress) as Fiber;
   const currentVdom = Active;
 
   // TODO: `newVdom` returns the div, not the root component.
   //       Need to make sure `newVdom` is it's parent before doing stuff like below (good time to implement fiber._owner?)
   // newVdom.hooks = currentVdom.hooks;
 
-  console.log("NEW", newVdom);
+  // console.log("NEW", newVdom);
   console.log("CURR", currentVdom);
 
   // 1. diff
