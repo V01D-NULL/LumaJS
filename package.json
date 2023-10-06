@@ -1,37 +1,6 @@
 {
-    "name": "luma-js",
-    "description": "ReactJS clone for learning purposes.",
-    "version": "1.0.7",
-    "main": "build/index.js",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/V01D-NULL/LumaJS.git"
-    },
-    "keywords": [
-        "framework"
-    ],
-    "author": "V01D-NULL",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/V01D-NULL/LumaJS/issues"
-    },
-    "homepage": "https://github.com/V01D-NULL/LumaJS#readme",
-    "files": [
-        "build/"
-    ],
-    "types": "build/index.d.ts",
-    "dependencies": {
-        "@babel/preset-react": "^7.22.5",
-        "parcel": "^2.8.2",
-        "watch": "^1.0.2"
-    },
-    "scripts": {
-        "build": "tsc --build",
-        "serve": "npx parcel demo/index.html",
-        "watch": "watch 'npm run build' ./src",
-        "dev": "npm run serve& watch 'NODE_ENV=development npm run build' ./src"
-    },
-    "devDependencies": {
-        "process": "^0.11.10"
-    }
+  "name": "LumaJS",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT"
 }

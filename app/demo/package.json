@@ -1,0 +1,17 @@
+{
+  "name": "hi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node bundle.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chokidar": "^3.5.3",
+    "esbuild": "^0.19.4",
+    "live-server": "^1.2.2"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "packages",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc && cp -r types build",
+    "watch": "tsc -p ./tsconfig.json -w"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "snabbdom": "^3.5.1"
+  }
+}
