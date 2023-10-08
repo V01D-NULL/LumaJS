@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "jsx": "react",
-    "jsxFactory": "LumaJS.createElement",
+    "jsx": "preserve",
     "module": "ESNext",
     "target": "ESNext",
     "moduleResolution": "node",

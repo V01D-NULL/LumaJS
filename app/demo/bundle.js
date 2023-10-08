@@ -6,7 +6,7 @@ const liveServer = require("live-server");
 function bundle() {
   esbuild
     .build({
-      entryPoints: ["src/App.tsx"], // Adjust if your entry point is different
+      entryPoints: ["src/App.tsx"],
       bundle: true,
       outfile: "dist/bundle.js",
       loader: {
@@ -14,8 +14,12 @@ function bundle() {
         ".ts": "ts",
         ".tsx": "tsx",
       },
-      jsxFactory: "LumaJS.createElement",
-      jsxFragment: "LumaJS.Fragment",
+      jsx: "automatic",
+      jsxDev: true,
+      alias: {
+        "react/jsx-dev-runtime":
+          "../../package/build/reconciler/createElement.js",
+      },
     })
     .catch(() => process.exit(1));
 }
@@ -30,5 +34,5 @@ chokidar.watch(["src/**/*", "../../package/**/*"]).on("change", bundle);
 liveServer.start({
   root: ".",
   open: false,
-  wait: 200, // Wait for all changes, before reloading.
+  wait: 200,
 });

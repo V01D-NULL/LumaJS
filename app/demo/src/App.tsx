@@ -12,7 +12,13 @@ function NestedFC() {
 function App() {
   LumaJS.useMount(() => console.log("Mounted App component"));
 
-  return <NestedFC />;
+  return (
+    <div>
+      <button on={{ click: () => console.log("click") }}>Click</button>
+      <br />
+      <NestedFC />
+    </div>
+  );
 }
 
 LumaJS.render(<App />, document.getElementById("root"));
