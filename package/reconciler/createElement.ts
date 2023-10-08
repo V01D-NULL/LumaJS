@@ -7,10 +7,10 @@ function createElement(
   ...children: VNodeChildElement[]
 ) {
   if (type instanceof Function) {
-    LumaCurrentComponent.current = {} as any;
+    LumaCurrentComponent.new({ ref: type.name } as any);
     const fc = type(props, children);
     fc.data!.hook = { ...LumaCurrentComponent.current?.domHooks };
-    LumaCurrentComponent.current = null;
+    LumaCurrentComponent.delete();
     return fc;
   }
 

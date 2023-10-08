@@ -22,8 +22,13 @@ function registerDomHook(
   LumaCurrentComponent.current.domHooks[domHookName] = callback;
 }
 
-function registerHook(callback: Function) {
-  throw new Error("Not implemented");
+function registerHook<T>(state: T) {
+  if (!LumaCurrentComponent.current) {
+    // throw new Error("Hooks can only be called inside of components");
+  }
+
+  // LumaCurrentComponent.current.hooks ??= [];
+  // LumaCurrentComponent.current.hooks.push(state);
 }
 
 export { registerHook, registerDomHook };

@@ -1,18 +1,18 @@
 import LumaJS from "../../../package/build/html";
 
-function App() {
-  LumaJS.useMount(() => console.log("Mounted component!"));
-
+function NestedFC() {
   return (
     <div>
-      <button class={{ bruh: true }} on={{ click: () => console.log("click") }}>
-        click me
-      </button>
-      <br />
-      <br />
-      <a props={{ href: "#" }}>Goto</a>
+      Despite this component being nested, the hooks will be scoped to their
+      respective components!
     </div>
   );
+}
+
+function App() {
+  LumaJS.useMount(() => console.log("Mounted App component"));
+
+  return <NestedFC />;
 }
 
 LumaJS.render(<App />, document.getElementById("root"));
