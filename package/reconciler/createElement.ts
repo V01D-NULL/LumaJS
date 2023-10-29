@@ -16,6 +16,7 @@ function createElement(
     LumaCurrentComponent.new({} as any);
     const fc = type(config, children);
     fc.data = {
+      ...fc.data,
       hook: LumaCurrentComponent.current?.domHooks,
 
       /* LumaJS specific data */
