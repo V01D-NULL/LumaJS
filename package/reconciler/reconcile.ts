@@ -24,7 +24,7 @@ function dispatch(component: NonNullable<typeof LumaCurrentComponent.current>) {
   LumaCurrentComponent.delete();
   LumaCurrentRootComponent.current = reconcile(
     LumaCurrentRootComponent.current,
-    reconciledComponent
+    reconciledComponent!
   );
 }
 

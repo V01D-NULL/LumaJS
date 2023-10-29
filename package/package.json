@@ -1,10 +1,26 @@
 {
-  "name": "packages",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "luma-js",
+  "version": "2.0.2",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/V01D-NULL/LumaJS.git"
+  },
+  "keywords": [
+    "framework"
+  ],
+  "author": "V01D-NULL",
+  "bugs": {
+    "url": "https://github.com/V01D-NULL/LumaJS/issues"
+  },
+  "homepage": "https://github.com/V01D-NULL/LumaJS#readme",
+  "files": [
+    "build/"
+  ],
+  "main": "build/html.js",
+  "types": "build/html.d.ts",
   "scripts": {
-    "build": "tsc && cp -r types build",
+    "build": "tsc",
     "watch": "tsc -p ./tsconfig.json -w"
   },
   "devDependencies": {
