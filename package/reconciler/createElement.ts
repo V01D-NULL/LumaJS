@@ -15,25 +15,20 @@ function createElement(
   if (type instanceof Function) {
     LumaCurrentComponent.new({} as any);
     const fc = type(config, children);
-    let x: VNode = {} as any;
-
     fc.data = {
-      hook: {
-        ...LumaCurrentComponent.current?.domHooks,
-        update: (oldNode, newNode) => {
-          const data = oldNode.data!.luma;
-          console.log("Patching a function component:", data.fc);
-        },
-      },
+      hook: LumaCurrentComponent.current?.domHooks,
 
       /* LumaJS specific data */
       luma: {
-        hooks: [],
         debug: { self, source },
-        fc: type.name,
+        component: type.name,
+        reconcileComponent: () =>
+          createElement(type, { ...config, children }, key, source, self),
       },
     };
 
+    LumaCurrentComponent.current!.node = fc;
+    LumaCurrentComponent.current!.ref = type.name;
     LumaCurrentComponent.delete();
     return fc;
   }

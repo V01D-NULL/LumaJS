@@ -1,4 +1,4 @@
 import { useMount } from "./useMount";
-import { useState } from "./useState";
+import { useState } from "./hooks";
 
 export default { useMount, useState };

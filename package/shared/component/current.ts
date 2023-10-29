@@ -9,7 +9,6 @@ type CurrentSingular = {
   ref: string;
   node: VNode;
   domHooks: DomHooks;
-  hooks: any[];
 };
 
 type ComponentStackHelpers = {

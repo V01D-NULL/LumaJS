@@ -8,8 +8,4 @@ const LumaCurrentRootComponent: CurrentComponent = {
   current: {} as any,
 };
 
-const LumaCurrentWipComponent: CurrentComponent = {
-  current: {} as any,
-};
-
-export { LumaCurrentRootComponent, LumaCurrentWipComponent };
+export { LumaCurrentRootComponent };
