@@ -13,7 +13,6 @@ LumaJS is a React inspired framework created for learning purposes. It implement
 The recommended way to start a new LumaJS project is using create-luma-app:
 
 ```sh
-# FIXME
 # This will generate a new LumaJS app in the current working directory.
 # npx create-luma-app
 ```
@@ -21,7 +20,6 @@ The recommended way to start a new LumaJS project is using create-luma-app:
 You can also install LumaJS locally and import it:
 
 ```sh
-# FIXME
 # npm install luma-js
 ```
 
