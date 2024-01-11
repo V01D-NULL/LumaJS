@@ -6,6 +6,9 @@ function Home() {
     <div>
       Hello, world :D
       <p style={{ background: "red" }}>Red!</p>
+      <a attrs={{ href: "/about" }}>About</a>
+      <br />
+      <a attrs={{ href: "/foo" }}>This is 404!</a>
     </div>
   );
 }

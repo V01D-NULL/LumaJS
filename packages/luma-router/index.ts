@@ -14,7 +14,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   try {
-    const routeFile = fs.readdirSync("./dist/pages" + req.url)[0];
+    const routeFile = fs.readdirSync(".luma/pages" + req.url)[0];
     const url = req.url.replace(/\//g, "");
     const path = `./pages/${url}/${routeFile}`;
 

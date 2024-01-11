@@ -2,7 +2,7 @@ const esbuild = require("esbuild");
 const fs = require("fs");
 const path = require("path");
 
-// Function to recursively get all page files with 'page' in the filename
+// Recursively get all page files with 'page' in the filename
 function getPageFiles(dir, fileList = []) {
   const files = fs.readdirSync(dir);
 
@@ -18,26 +18,25 @@ function getPageFiles(dir, fileList = []) {
   return fileList;
 }
 
-// Function to bundle with esbuild
-function bundle() {
+async function bundle() {
+  console.log("[*] Building server...");
   // Build the main bundle
-  esbuild
+  await esbuild
     .build({
-      entryPoints: ["src/router.ts"],
+      entryPoints: ["src/router/index.ts"],
       bundle: true,
-      outfile: "dist/server.js",
+      outfile: ".luma/server.js",
       minify: true,
       platform: "node",
       loader: {
-        ".js": "jsx",
         ".ts": "ts",
-        ".tsx": "tsx",
       },
-      jsx: "automatic",
-      jsxDev: true,
-      // Additional configurations if needed
     })
     .catch(() => process.exit(1));
+
+  console.log("[+] Built server");
+
+  console.log("[*] Gathering & building SSR pages...");
 
   // Build individual page files
   const pagesDir = "src/pages";
@@ -46,7 +45,7 @@ function bundle() {
   pageFiles.forEach((filePath) => {
     const relativePath = path.relative(pagesDir, filePath);
     const outPath = path.join(
-      "dist/pages",
+      ".luma/pages",
       relativePath.replace(".tsx", ".js")
     );
 
@@ -71,7 +70,8 @@ function bundle() {
       })
       .catch(() => process.exit(1));
   });
+  console.log("[+] Built SSR pages");
+  console.log("[+] Build complete");
 }
 
-// Initial build
 bundle();
