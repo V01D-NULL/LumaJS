@@ -4,7 +4,8 @@
   "description": "node.js router for luma-js SSR",
   "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "watch": "tsc -p ./tsconfig.json -w"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/V01D-NULL/LumaJS/issues"
   },
-  "homepage": "https://github.com/V01D-NULL/LumaJS#readme"
+  "homepage": "https://github.com/V01D-NULL/LumaJS#readme",
+  "devDependencies": {
+    "@types/node": "^20.10.8",
+    "typescript": "^5.3.3"
+  }
 }

@@ -64,7 +64,7 @@ function bundle() {
         jsxDev: true,
         alias: {
           "react/jsx-dev-runtime":
-            "../../package/build/reconciler/createElement.js",
+            "../../packages/luma-js/build/reconciler/createElement.js",
         },
       })
       .catch(() => process.exit(1));
