@@ -1,9 +1,11 @@
 import http from "http";
 import fs from "fs";
 import { respondError, respondOk } from "./util/respond";
+import { Page404 } from "./html/404";
+import { Page500 } from "./html/500";
 
 const ErrorMapping = {
-  ENOENT: { code: 404, message: "Not Found" },
+  ENOENT: { code: 404, template: Page404 },
 };
 
 const server = http.createServer(async (req, res) => {
@@ -20,8 +22,10 @@ const server = http.createServer(async (req, res) => {
 
     respondOk(res, ssrComponent);
   } catch (e: any) {
-    const { code, message } = ErrorMapping[e.code as keyof typeof ErrorMapping];
-    respondError(res, code, message);
+    const { code, template } =
+      ErrorMapping[e.code as keyof typeof ErrorMapping];
+
+    respondError(res, code, template ?? { code: 500, template: Page500 });
   }
 });
 

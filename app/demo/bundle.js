@@ -25,7 +25,8 @@ function bundle() {
     .build({
       entryPoints: ["src/router.ts"],
       bundle: true,
-      outfile: "dist/bundle.js",
+      outfile: "dist/server.js",
+      minify: true,
       platform: "node",
       loader: {
         ".js": "jsx",
@@ -55,6 +56,7 @@ function bundle() {
         bundle: true,
         outfile: outPath,
         platform: "node",
+        minify: true,
         loader: {
           ".js": "jsx",
           ".ts": "ts",

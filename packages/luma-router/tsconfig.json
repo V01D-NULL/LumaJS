@@ -16,6 +16,6 @@
     "jsxFactory": "jsx",
     "jsxFragmentFactory": "Fragment"
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "./**/*.html"],
   "exclude": ["node_modules", "build"]
 }
