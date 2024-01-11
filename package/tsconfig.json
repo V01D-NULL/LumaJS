@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "*": ["./*"]
-    },
+    // "baseUrl": ".",
+    // "paths": {
+    //   "*": ["./*"]
+    // },
     "lib": ["ES2020", "DOM"],
     "target": "ES6",
     "allowSyntheticDefaultImports": true,
@@ -13,6 +13,7 @@
     "outDir": "./build",
     "declaration": true,
     "moduleResolution": "node",
+    "module": "ES2020",
     "strict": true,
     "skipLibCheck": true,
     "jsx": "react",

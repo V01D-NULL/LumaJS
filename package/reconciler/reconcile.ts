@@ -1,5 +1,5 @@
-import { LumaCurrentComponent } from "shared/component/current";
-import { LumaCurrentRootComponent } from "shared/component/root";
+import { LumaCurrentComponent } from "../shared/component/current";
+import { LumaCurrentRootComponent } from "../shared/component/root";
 import {
   init,
   classModule,

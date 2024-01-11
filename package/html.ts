@@ -1,6 +1,7 @@
-import render from "backend/html/render";
-import { LumaJS } from "shared/luma";
-import Hooks from "backend/html/hooks";
+import render from "./backend/html/render";
+import ssrRender, { preRender } from "./backend/html/ssr";
+import { LumaJS } from "./shared/luma";
+import Hooks from "./backend/html/hooks";
 import { VNode, VNodeData } from "snabbdom";
 
 type HostComponent = Pick<
@@ -152,4 +153,6 @@ export default {
   ...LumaJS,
   ...Hooks,
   render,
+  ssrRender,
+  preRender,
 };

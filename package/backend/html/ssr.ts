@@ -1,8 +1,12 @@
 import { VNode } from "snabbdom";
 import { reconcile } from "../../reconciler/reconcile";
 import { LumaCurrentRootComponent } from "../../shared/component/root";
+// @ts-ignore
+import init from "snabbdom-to-html/init";
+// @ts-ignore
+import modules from "snabbdom-to-html/modules";
 
-function render(node: VNode, container: Element | null) {
+function ssrRender(node: VNode, container: VNode | null) {
   if (container === null) {
     throw new Error("container is null, cannot render without root!");
   }
@@ -14,4 +18,16 @@ function render(node: VNode, container: Element | null) {
   LumaCurrentRootComponent.current = reconcile(container, node);
 }
 
-export default render;
+function preRender(node: VNode) {
+  const toHTML = init([
+    modules.class,
+    modules.props,
+    modules.attributes,
+    modules.style,
+  ]);
+
+  return toHTML(node);
+}
+
+export default ssrRender;
+export { preRender };

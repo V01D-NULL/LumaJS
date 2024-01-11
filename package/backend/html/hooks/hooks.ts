@@ -1,5 +1,5 @@
-import { dispatch } from "reconciler/reconcile";
-import { LumaCurrentComponent } from "shared/component/current";
+import { dispatch } from "../../../reconciler/reconcile";
+import { LumaCurrentComponent } from "../../../shared/component/current";
 
 let hookIdx = 0;
 const hooks: any = [];

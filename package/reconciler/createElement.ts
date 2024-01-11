@@ -1,4 +1,4 @@
-import { LumaCurrentComponent } from "shared/component/current";
+import { LumaCurrentComponent } from "../shared/component/current";
 import { VNode, h } from "snabbdom";
 
 function createElement(

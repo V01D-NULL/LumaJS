@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./*"]
+    },
     "jsx": "preserve",
     "module": "ESNext",
     "target": "ESNext",

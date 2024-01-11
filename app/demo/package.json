@@ -4,14 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node bundle.js"
+    "start": "npx tsx ./src/serve"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^20.10.8",
     "chokidar": "^3.5.3",
     "esbuild": "^0.19.4",
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "luma-js": "file:../../package",
+    "snabbdom": "^3.5.1",
+    "snabbdom-to-html": "^7.1.0"
   }
 }

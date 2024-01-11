@@ -1,4 +1,4 @@
-import LumaJS from "../../../package/build/html";
+import LumaJS from "luma-js";
 const { useMount, useState } = LumaJS;
 
 function Counter() {
@@ -20,6 +20,8 @@ function Counter() {
 }
 
 function App() {
+  console.log(LumaJS, useMount);
+
   useMount(() => console.log("Mounted App component"));
   const [toggle, setToggle] = useState(false);
 
@@ -27,8 +29,8 @@ function App() {
   const [greetingIdx, setGreetingIdx] = useState(0);
 
   return (
-    <div>
-      <h1>Hidable Counter Demo </h1>
+    <div style={{ background: "red" }}>
+      <h1 style={{ background: "yellow" }}>Hidable Counter Demo </h1>
       <button on={{ click: () => setToggle(() => !toggle) }}>
         Toggle Counter
       </button>

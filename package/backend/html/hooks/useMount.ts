@@ -1,4 +1,4 @@
-import { registerDomHook } from "shared/hooks/register";
+import { registerDomHook } from "../../../shared/hooks/register";
 import { VNode } from "snabbdom";
 
 function useMount(callback: (node: VNode) => void | (() => void)) {

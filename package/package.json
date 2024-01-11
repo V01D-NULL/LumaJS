@@ -27,6 +27,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "snabbdom": "^3.5.1"
+    "snabbdom": "^3.5.1",
+    "snabbdom-to-html": "^7.1.0"
   }
 }
