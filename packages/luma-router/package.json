@@ -1,0 +1,25 @@
+{
+  "name": "luma-router",
+  "version": "1.0.0",
+  "description": "node.js router for luma-js SSR",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/V01D-NULL/LumaJS.git"
+  },
+  "keywords": [
+    "router",
+    "node.js",
+    "framework",
+    "ssr"
+  ],
+  "author": "Tim Thompson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/V01D-NULL/LumaJS/issues"
+  },
+  "homepage": "https://github.com/V01D-NULL/LumaJS#readme"
+}

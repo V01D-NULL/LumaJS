@@ -1,9 +1,5 @@
 {
   "compilerOptions": {
-    // "baseUrl": ".",
-    // "paths": {
-    //   "*": ["./*"]
-    // },
     "lib": ["ES2020", "DOM"],
     "target": "ES6",
     "allowSyntheticDefaultImports": true,
