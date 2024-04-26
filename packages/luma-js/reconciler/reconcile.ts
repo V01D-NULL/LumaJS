@@ -18,6 +18,8 @@ const reconcile = init([
 ]);
 
 function dispatch(component: NonNullable<typeof LumaCurrentComponent.current>) {
+  if (typeof window === "undefined") return;
+
   LumaCurrentComponent.new(component);
   const reconciledComponent =
     LumaCurrentRootComponent.current.data?.luma.reconcileComponent();
