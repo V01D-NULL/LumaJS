@@ -5,7 +5,7 @@ import init from "snabbdom-to-html/init";
 import modules from "snabbdom-to-html/modules";
 
 function ssrRender(node: VNode) {
-  return htmlify(node);
+  return [htmlify, node];
 }
 
 function htmlify(node: VNode) {

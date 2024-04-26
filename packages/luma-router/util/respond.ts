@@ -3,28 +3,22 @@ import fs from "fs";
 
 function respondOk(
   res: ServerResponse,
-  ssrComponent: Function,
-  clientBundle: string
+  ssrComponent: () => [Function, any /* VNode */],
+  clientBundle: string,
+  layout: ({ children }: { children: any }) => any /* VNode */
 ) {
   const frameworkBundle = fs.readFileSync(".luma/client.js", {
     encoding: "utf-8",
     flag: "r",
   });
 
-  const body = ssrComponent();
+  const [htmlify, node] = ssrComponent();
 
-  // TODO: Add a layout.tsx file to replace the hardcoded HTML/head/body tags
   const html = `
     <!DOCTYPE html>
-    <html>
-      <head>
-        <script>${frameworkBundle}</script>
-        <script>${clientBundle}</script>
-      </head>
-      <body>
-        ${body}
-      </body>
-    </html>
+    ${htmlify(layout({ children: node }))}
+    <script>${frameworkBundle}</script>
+    <script>${clientBundle}</script>
   `;
 
   res.writeHead(200, { "Content-Type": "text/html" });

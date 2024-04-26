@@ -119,6 +119,30 @@ async function bundle() {
     });
   });
 
+  console.log("[*] Bundling layout");
+  esbuild
+    .build({
+      entryPoints: ["src/pages/layout.tsx"],
+      bundle: true,
+      outfile: ".luma/pages/server/layout.js",
+      platform: "node",
+      minify: !true,
+      loader: {
+        ".js": "jsx",
+        ".ts": "ts",
+        ".tsx": "tsx",
+      },
+      jsx: "automatic",
+      jsxDev: true,
+      alias: {
+        "react/jsx-dev-runtime":
+          "../../packages/luma-js/build/reconciler/createElement.js",
+      },
+      keepNames: true,
+    })
+    .catch(() => process.exit(1));
+  console.log("[+] Bundled layout");
+
   console.log("[+] Built SSR pages");
   console.log("[+] Build complete");
 }

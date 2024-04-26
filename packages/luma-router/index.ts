@@ -25,7 +25,10 @@ const server = http.createServer(async (req, res) => {
       .readFileSync(".luma/pages/client/" + url + "/" + routeFile)
       .toString();
 
-    respondOk(res, ssrComponent, clientBundle);
+    const layoutFilePath = "./pages/server/layout.js";
+    const DefaultExportLayout = (await import(layoutFilePath)).default;
+
+    respondOk(res, ssrComponent, clientBundle, DefaultExportLayout.default);
   } catch (e: any) {
     console.log("error", e);
     const { code, template } =
