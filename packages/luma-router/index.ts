@@ -14,14 +14,20 @@ const server = http.createServer(async (req, res) => {
   }
 
   try {
-    const routeFile = fs.readdirSync(".luma/pages" + req.url)[0];
+    const routeFile = fs.readdirSync(".luma/pages/server" + req.url)[0];
     const url = req.url.replace(/\//g, "");
-    const path = `./pages/${url}/${routeFile}`;
+    const path = `./pages/server/${url}/${routeFile}`;
 
-    const { ssrComponent } = await import(path);
+    const DefaultExport = await import(path);
+    const { ssrComponent } = DefaultExport;
 
-    respondOk(res, ssrComponent);
+    const clientBundle = fs
+      .readFileSync(".luma/pages/client/" + url + "/" + routeFile)
+      .toString();
+
+    respondOk(res, ssrComponent, clientBundle);
   } catch (e: any) {
+    console.log("error", e);
     const { code, template } =
       ErrorMapping[e.code as keyof typeof ErrorMapping];
 

@@ -1,24 +1,14 @@
 import { VNode } from "snabbdom";
-import { reconcile } from "../../reconciler/reconcile";
-import { LumaCurrentRootComponent } from "../../shared/component/root";
 // @ts-ignore
 import init from "snabbdom-to-html/init";
 // @ts-ignore
 import modules from "snabbdom-to-html/modules";
 
-function ssrRender(node: VNode, container: VNode | null) {
-  if (container === null) {
-    throw new Error("container is null, cannot render without root!");
-  }
-
-  if (LumaCurrentRootComponent.current.elm) {
-    throw new Error("Duplicate call to render");
-  }
-
-  LumaCurrentRootComponent.current = reconcile(container, node);
+function ssrRender(node: VNode) {
+  return htmlify(node);
 }
 
-function preRender(node: VNode) {
+function htmlify(node: VNode) {
   const toHTML = init([
     modules.class,
     modules.props,
@@ -30,4 +20,3 @@ function preRender(node: VNode) {
 }
 
 export default ssrRender;
-export { preRender };

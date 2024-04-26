@@ -24,6 +24,7 @@
     "watch": "tsc -p ./tsconfig.json -w"
   },
   "devDependencies": {
+    "@types/node": "^20.12.7",
     "typescript": "^5.2.2"
   },
   "dependencies": {

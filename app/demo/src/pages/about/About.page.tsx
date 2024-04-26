@@ -1,10 +1,10 @@
 import LumaJS from "luma-js";
-const { preRender } = LumaJS;
+const { ssrRender } = LumaJS;
 
-function About() {
-  return <div>about page :)</div>;
+export default function About() {
+  return <div class={{ app: true }}>about page :)</div>;
 }
 
 export function ssrComponent() {
-  return preRender(<About />);
+  return ssrRender(<About />);
 }

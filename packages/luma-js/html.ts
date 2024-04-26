@@ -1,8 +1,9 @@
 import render from "./backend/html/render";
-import ssrRender, { preRender } from "./backend/html/ssr";
+import ssrRender from "./backend/html/ssr";
 import { LumaJS } from "./shared/luma";
 import Hooks from "./backend/html/hooks";
 import { VNode, VNodeData } from "snabbdom";
+import { hydrateRoot } from "./reconciler/hydrate";
 
 type HostComponent = Pick<
   VNodeData,
@@ -154,5 +155,5 @@ export default {
   ...Hooks,
   render,
   ssrRender,
-  preRender,
+  __LUMA_INTERNAL__: { hydrateRoot },
 };

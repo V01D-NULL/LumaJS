@@ -1,18 +1,21 @@
 import LumaJS from "luma-js";
-const { preRender } = LumaJS;
+const { ssrRender } = LumaJS;
 
-function Home() {
+import Foo from "../components/Foo";
+
+export default function Home() {
   return (
-    <div>
+    <div class={{ app: true }}>
       Hello, world :D
       <p style={{ background: "red" }}>Red!</p>
       <a attrs={{ href: "/about" }}>About</a>
       <br />
       <a attrs={{ href: "/foo" }}>This is 404!</a>
+      <Foo />
     </div>
   );
 }
 
 export function ssrComponent() {
-  return preRender(<Home />);
+  return ssrRender(<Home />);
 }
