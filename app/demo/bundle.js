@@ -18,6 +18,25 @@ function getPageFiles(dir, fileList = []) {
   return fileList;
 }
 
+const removeGetServerPropsPlugin = {
+  name: "remove-getServerProps",
+  setup(build) {
+    build.onLoad({ filter: /\.page.tsx$/ }, (args) => {
+      const code = fs.readFileSync(args.path, "utf8");
+
+      const modifiedCode = code.replace(
+        /export\s+async\s+function\s+getServerProps[\s\S]*?}\s*$/gm,
+        ""
+      );
+
+      return {
+        contents: modifiedCode,
+        loader: "tsx",
+      };
+    });
+  },
+};
+
 async function bundle() {
   console.log("[*] Building server...");
   // Build the main bundle
@@ -72,14 +91,14 @@ async function bundle() {
 
     esbuild
       .build({
+        plugins: [removeGetServerPropsPlugin],
         entryPoints: [filePath],
+        treeShaking: true,
         bundle: true,
         outfile: outPathClient,
         platform: "browser",
         minify: true,
         loader: {
-          ".js": "jsx",
-          ".ts": "ts",
           ".tsx": "tsx",
         },
         jsx: "automatic",
@@ -105,7 +124,6 @@ async function bundle() {
       platform: "node",
       minify: !true,
       loader: {
-        ".js": "jsx",
         ".ts": "ts",
         ".tsx": "tsx",
       },

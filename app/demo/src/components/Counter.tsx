@@ -1,6 +1,5 @@
-import LumaJS from "luma-js";
+import { useState } from "luma-js";
 import { className } from "src/utils/classname";
-const { useState } = LumaJS;
 
 /*
  * Demonstrate simple state management with LumaJS.

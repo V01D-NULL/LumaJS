@@ -1,6 +1,5 @@
-import LumaJS from "luma-js";
+import { useMount, useState } from "luma-js";
 import { className } from "src/utils/classname";
-const { useMount } = LumaJS;
 
 /*
  *  Demonstrates how fast LumaJS can update the DOM.
@@ -9,7 +8,7 @@ const { useMount } = LumaJS;
 function FastRandom() {
   useMount(() => console.log("Mounted FastRandom component"));
 
-  const [random, setRandom] = LumaJS.useState(0);
+  const [random, setRandom] = useState(0);
 
   setTimeout(() => {
     setRandom(Math.random());
