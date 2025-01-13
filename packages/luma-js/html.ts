@@ -1,5 +1,4 @@
 import render from "./backend/html/render";
-import ssrRender from "./backend/html/ssr";
 import { LumaJS } from "./shared/luma";
 import Hooks from "./backend/html/hooks";
 import { VNode, VNodeData } from "snabbdom";
@@ -154,6 +153,5 @@ export default {
   ...LumaJS,
   ...Hooks,
   render,
-  ssrRender,
   __LUMA_INTERNAL__: { hydrateRoot },
 };

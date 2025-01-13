@@ -1,5 +1,4 @@
 import LumaJS from "luma-js";
-const { ssrRender } = LumaJS;
 
 import Foo from "../components/Foo";
 
@@ -14,8 +13,4 @@ export default function Home() {
       <Foo />
     </div>
   );
-}
-
-export function ssrComponent() {
-  return ssrRender(<Home />);
 }
