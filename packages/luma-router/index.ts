@@ -14,12 +14,19 @@ const server = http.createServer(async (req, res) => {
   }
 
   try {
-    const routeFile = fs.readdirSync(".luma/pages/server" + req.url)[0];
+    const directoryListing = fs.readdirSync(".luma/pages/server" + req.url);
+
+    const routeFile =
+      req.url === "/"
+        ? directoryListing.find(
+            (file) => file.endsWith(".js") && file !== "layout.js"
+          )
+        : directoryListing[0];
+
     const url = req.url.replace(/\//g, "");
     const path = `./pages/server/${url}/${routeFile}`;
 
-    const DefaultExport = await import(path);
-    const { ssrComponent } = DefaultExport;
+    const { ssrComponent } = await import(path);
 
     const clientBundle = fs
       .readFileSync(".luma/pages/client/" + url + "/" + routeFile)
@@ -31,16 +38,21 @@ const server = http.createServer(async (req, res) => {
     respondOk(res, ssrComponent, clientBundle, DefaultExportLayout.default);
   } catch (e: any) {
     console.log("error", e);
-    const { code, template } =
-      ErrorMapping[e.code as keyof typeof ErrorMapping];
+    const { code, template } = ErrorMapping[
+      e.code as keyof typeof ErrorMapping
+    ] ?? { code: 500, template: Page500 };
 
-    respondError(res, code, template ?? { code: 500, template: Page500 });
+    respondError(res, code, template);
   }
 });
 
-const startServer = () =>
-  server.listen(3000, () =>
-    console.log("Server running at http://localhost:3000/")
-  );
+const startServer = (port?: number, callback?: () => void) => {
+  const defaultCallback = () =>
+    console.log("Server running at http://localhost:3000/");
+
+  const defaultPort = 3000;
+
+  server.listen(port ?? defaultPort, callback ?? defaultCallback);
+};
 
 export { startServer };
