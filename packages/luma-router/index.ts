@@ -20,7 +20,9 @@ const server = http.createServer(async (req, res) => {
 
     const layoutFilePath = "./pages/server/layout.js";
     const { default: LayoutComponent } = await import(layoutFilePath);
-    const { default: ServerComponent } = await import(path);
+    const { default: ServerComponent, getServerProps } = await import(path);
+
+    const serverProps = await getServerProps();
 
     const clientBundle = fs
       .readFileSync(".luma/pages/client/" + url + "/" + routeFile)
@@ -29,6 +31,7 @@ const server = http.createServer(async (req, res) => {
     respondOk(
       res,
       clientBundle,
+      serverProps,
       ServerComponent.default,
       LayoutComponent.default
     );

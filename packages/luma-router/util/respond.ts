@@ -5,7 +5,8 @@ import { htmlify } from "./htmlify";
 function respondOk(
   res: ServerResponse,
   clientBundle: string,
-  component: () => any /* VNode */,
+  serverProps: any,
+  component: ({ props }: { props: any }) => any /* VNode */,
   layout: ({ children }: { children: any }) => any /* VNode */
 ) {
   const frameworkBundle = fs.readFileSync(".luma/client.js", {
@@ -15,7 +16,12 @@ function respondOk(
 
   const html = `
     <!DOCTYPE html>
-    ${htmlify(layout({ children: component() }))}
+    ${htmlify(
+      layout({
+        children: component(serverProps),
+      })
+    )}
+    <script>window.__LUMA_SSR_PROPS__ = ${JSON.stringify(serverProps)}</script>
     <script>${frameworkBundle}</script>
     <script>${clientBundle}</script>
   `;
