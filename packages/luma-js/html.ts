@@ -6,6 +6,8 @@ import { hydrateRoot } from "./reconciler/hydrate";
 export { render };
 export { useMount, useState } from "./backend/html/hooks";
 
+export * from "./types/ssr.types";
+
 export default {
   ...LumaJS,
   render,

@@ -16,13 +16,18 @@ const server = http.createServer(async (req, res) => {
   }
 
   try {
-    const [url, path, routeFile] = url2filepath(req.url);
+    const urlObj = new URL(req.url, "luma://base"); // base url is irrelevant
+
+    const [url, path, routeFile] = url2filepath(urlObj.pathname);
 
     const layoutFilePath = "./pages/server/layout.js";
     const { default: LayoutComponent } = await import(layoutFilePath);
     const { default: ServerComponent, getServerProps } = await import(path);
 
-    const serverProps = await getServerProps();
+    const serverProps = await getServerProps({
+      searchParams: urlObj.searchParams,
+      uri: urlObj.pathname,
+    });
 
     const clientBundle = fs
       .readFileSync(".luma/pages/client/" + url + "/" + routeFile)

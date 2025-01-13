@@ -2,6 +2,7 @@ import { className } from "src/utils/classname";
 import FastRandom from "../components/FastRandom";
 import Counter from "src/components/Counter";
 import ServerProps from "src/components/ServerProps";
+import type { GetServerPropsParams } from "luma-js";
 
 type HomeProps = {
   props: {
@@ -41,8 +42,10 @@ export default function Home(props: HomeProps) {
   );
 }
 
-export async function getServerProps(): Promise<HomeProps> {
-  console.log("getServerProps");
+export async function getServerProps(
+  args: GetServerPropsParams
+): Promise<HomeProps> {
+  console.log("getServerProps", args.searchParams.get("foo"), args.uri);
 
   return {
     props: {
