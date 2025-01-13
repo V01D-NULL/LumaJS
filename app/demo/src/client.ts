@@ -1,3 +1,8 @@
+interface Window {
+  __LUMA_FRAMEWORK__: any;
+  __LUMA_ROOT__: any;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log(
     window.__LUMA_FRAMEWORK__.default.__LUMA_INTERNAL__.hydrateRoot(
