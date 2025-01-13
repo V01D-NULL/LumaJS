@@ -1,8 +1,16 @@
 import render from "./backend/html/render";
 import { LumaJS } from "./shared/luma";
-import Hooks from "./backend/html/hooks";
 import { VNode, VNodeData } from "snabbdom";
 import { hydrateRoot } from "./reconciler/hydrate";
+
+export { render };
+export { useMount, useState } from "./backend/html/hooks";
+
+export default {
+  ...LumaJS,
+  render,
+  __LUMA_INTERNAL__: { hydrateRoot },
+};
 
 type HostComponent = Pick<
   VNodeData,
@@ -148,10 +156,3 @@ declare module "snabbdom" {
     };
   }
 }
-
-export default {
-  ...LumaJS,
-  ...Hooks,
-  render,
-  __LUMA_INTERNAL__: { hydrateRoot },
-};
