@@ -1,10 +1,11 @@
 import type { ServerResponse } from "http";
 import fs from "fs";
+import { htmlify } from "./htmlify";
 
 function respondOk(
   res: ServerResponse,
-  ssrComponent: () => [Function, any /* VNode */],
   clientBundle: string,
+  component: () => any /* VNode */,
   layout: ({ children }: { children: any }) => any /* VNode */
 ) {
   const frameworkBundle = fs.readFileSync(".luma/client.js", {
@@ -12,11 +13,9 @@ function respondOk(
     flag: "r",
   });
 
-  const [htmlify, node] = ssrComponent();
-
   const html = `
     <!DOCTYPE html>
-    ${htmlify(layout({ children: node }))}
+    ${htmlify(layout({ children: component() }))}
     <script>${frameworkBundle}</script>
     <script>${clientBundle}</script>
   `;

@@ -26,5 +26,8 @@
   "devDependencies": {
     "@types/node": "^20.10.8",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "snabbdom-to-html": "^7.1.0"
   }
 }

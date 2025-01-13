@@ -3,6 +3,8 @@ import fs from "fs";
 import { respondError, respondOk } from "./util/respond";
 import { Page404 } from "./html/404";
 import { Page500 } from "./html/500";
+import { htmlify } from "./util/htmlify";
+import { url2filepath } from "./util/url2file";
 
 const ErrorMapping = {
   ENOENT: { code: 404, template: Page404 },
@@ -14,33 +16,30 @@ const server = http.createServer(async (req, res) => {
   }
 
   try {
-    const directoryListing = fs.readdirSync(".luma/pages/server" + req.url);
+    const [url, path, routeFile] = url2filepath(req.url);
 
-    const routeFile =
-      req.url === "/"
-        ? directoryListing.find(
-            (file) => file.endsWith(".js") && file !== "layout.js"
-          )
-        : directoryListing[0];
-
-    const url = req.url.replace(/\//g, "");
-    const path = `./pages/server/${url}/${routeFile}`;
-
-    const { ssrComponent } = await import(path);
+    const layoutFilePath = "./pages/server/layout.js";
+    const { default: LayoutComponent } = await import(layoutFilePath);
+    const { default: ServerComponent } = await import(path);
 
     const clientBundle = fs
       .readFileSync(".luma/pages/client/" + url + "/" + routeFile)
       .toString();
 
-    const layoutFilePath = "./pages/server/layout.js";
-    const DefaultExportLayout = (await import(layoutFilePath)).default;
-
-    respondOk(res, ssrComponent, clientBundle, DefaultExportLayout.default);
+    respondOk(
+      res,
+      clientBundle,
+      ServerComponent.default,
+      LayoutComponent.default
+    );
   } catch (e: any) {
     console.log("error", e);
-    const { code, template } = ErrorMapping[
-      e.code as keyof typeof ErrorMapping
-    ] ?? { code: 500, template: Page500 };
+
+    const err = ErrorMapping[e.code as keyof typeof ErrorMapping];
+    const { code, template } = err ?? {
+      code: 500,
+      template: Page500,
+    };
 
     respondError(res, code, template);
   }
