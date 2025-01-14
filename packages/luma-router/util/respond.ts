@@ -9,7 +9,7 @@ function respondOk(
   component: ({ props }: { props: any }) => any /* VNode */,
   layout: ({ children }: { children: any }) => any /* VNode */
 ) {
-  const frameworkBundle = fs.readFileSync(".luma/client.js", {
+  const frameworkBundle = fs.readFileSync(".luma/framework.js", {
     encoding: "utf-8",
     flag: "r",
   });
