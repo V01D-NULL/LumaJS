@@ -42,7 +42,7 @@ async function bundle() {
   // Build the main bundle
   await esbuild
     .build({
-      entryPoints: ["src/router/index.ts"],
+      entryPoints: ["src/server.ts"],
       bundle: true,
       outfile: ".luma/server.js",
       minify: !true,
