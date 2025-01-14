@@ -1,9 +1,10 @@
-const esbuild = require("esbuild");
-const fs = require("fs");
-const path = require("path");
+import esbuild from "esbuild";
+import fs from "fs";
+import path from "path";
+const LumaConfig = require(path.resolve(process.cwd(), "luma.config.json"));
 
 // Recursively get all page files with 'page' in the filename
-function getPageFiles(dir, fileList = []) {
+function getPageFiles(dir: string, fileList: string[] = []) {
   const files = fs.readdirSync(dir);
 
   files.forEach((file) => {
@@ -20,8 +21,8 @@ function getPageFiles(dir, fileList = []) {
 
 const removeGetServerPropsPlugin = {
   name: "remove-getServerProps",
-  setup(build) {
-    build.onLoad({ filter: /\.page.tsx$/ }, (args) => {
+  setup(build: any) {
+    build.onLoad({ filter: /\.page.tsx$/ }, (args: any) => {
       const code = fs.readFileSync(args.path, "utf8");
 
       const modifiedCode = code.replace(
@@ -42,7 +43,7 @@ async function bundle() {
   // Build the main bundle
   await esbuild
     .build({
-      entryPoints: ["src/server.ts"],
+      entryPoints: [LumaConfig.server],
       bundle: true,
       outfile: ".luma/server.js",
       minify: !true,
@@ -58,7 +59,7 @@ async function bundle() {
   console.log("[*] Bundling client payload...");
   await esbuild
     .build({
-      entryPoints: ["src/client.ts"],
+      entryPoints: [path.resolve(__dirname, "build-utils/client.js")],
       bundle: true,
       minify: !true,
       outfile: ".luma/client.js",
@@ -74,7 +75,7 @@ async function bundle() {
   console.log("[*] Gathering & building SSR pages...");
 
   // Build individual page files
-  const pagesDir = "src/pages";
+  const pagesDir = `${LumaConfig.source}/pages`;
   const pageFiles = getPageFiles(pagesDir);
 
   pageFiles.forEach((filePath) => {
@@ -110,7 +111,7 @@ async function bundle() {
         keepNames: true,
         globalName: "__LUMA_ROOT__",
         format: "iife",
-        inject: ["luma-shim.js"],
+        inject: [path.resolve(__dirname, "build-utils/luma-shim.js")],
         banner: {
           js: "if (!window.__LUMA_FRAMEWORK__) window.__LUMA_FRAMEWORK__ = {};", // stub global framework instance if it does not yet exist
         },
@@ -140,7 +141,7 @@ async function bundle() {
   console.log("[*] Bundling layout");
   esbuild
     .build({
-      entryPoints: ["src/pages/layout.tsx"],
+      entryPoints: [`${LumaConfig.source}/pages/layout.tsx`],
       bundle: true,
       outfile: ".luma/pages/server/layout.js",
       platform: "node",
@@ -165,4 +166,4 @@ async function bundle() {
   console.log("[+] Build complete");
 }
 
-bundle();
+export { bundle };

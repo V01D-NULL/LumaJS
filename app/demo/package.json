@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node bundle.js",
+    "dev": "luma dev",
+    "build": "luma build",
     "start": "node .luma/server.js"
   },
   "keywords": [],
@@ -16,7 +17,6 @@
     "esbuild": "^0.19.4",
     "live-server": "^1.2.2",
     "luma-js": "file:../../packages/luma-js",
-    "luma-router": "file:../../packages/luma-router",
     "snabbdom": "^3.5.1",
     "snabbdom-to-html": "^7.1.0"
   }
