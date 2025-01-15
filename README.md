@@ -39,3 +39,11 @@ cd app/demo
 npm install
 npm run dev
 ```
+
+### How it works:
+
+At the core of this framework is `luma-js`. It is the actual javascript framework containing vital things such as hooks and reconcilation. It is powered by snabbdom.
+
+SSR support for luma is powered by `luma-router`, a package that acts as a page router and rendering service. Server side props, initial server renders and co happen in this package.
+
+`luma-cli` is a package to provide convenience methods for building and running luma with ssr.
