@@ -1,11 +1,12 @@
 <h1 align="center">LumaJS</h1>
 
 <p align="center">
-LumaJS is a React inspired framework with optional SSR capabilities via the `luma-router`, built for learning purposes. It implements/mimics some of the features and APIs of React but is not intended for production use.
+LumaJS is a React inspired framework with optional SSR capabilities via luma-router, built for learning purposes. It implements/mimics some of the features and APIs of React but is not intended for production use.
 </p>
 
 <p align="center">
-  <img width="450" alt="luma" src="https://github.com/V01D-NULL/LumaJS/assets/58613685/2e6554ac-ec70-435d-97ee-30a46ff2e82b">
+<img width="749" alt="Screenshot 2025-01-15 at 02 33 52" src="https://github.com/user-attachments/assets/2b8c01b2-05fc-45f3-b160-5ac4259846f9" />
+
 <p/>
 
 ### Getting Started
@@ -26,6 +27,7 @@ Run the examples:
 Packages:
 
 ```sh
+# project root
 npm install
 npm run build
 ```
