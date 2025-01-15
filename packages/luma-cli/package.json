@@ -9,6 +9,9 @@
   "bin": {
     "luma": "build/bin/cli.js"
   },
+  "workspaces": [
+    "../luma-js"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -8,6 +8,11 @@
     "build": "luma build",
     "start": "node .luma/server.js"
   },
+  "workspaces": [
+    "../../packages/luma-js",
+    "../../packages/luma-cli",
+    "../../packages/luma-router"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -16,7 +21,6 @@
     "chokidar": "^3.5.3",
     "esbuild": "^0.19.4",
     "live-server": "^1.2.2",
-    "luma-js": "file:../../packages/luma-js",
     "snabbdom": "^3.5.1",
     "snabbdom-to-html": "^7.1.0"
   }
