@@ -10,6 +10,12 @@ type HomeProps = {
   };
 };
 
+/*
+ *
+ * Simple page component. This is rendered on the server and client and may therefore not contain any hooks or client specific logic.
+ * Data fetching should be done in getServerProps and passed as props as demonstrated in this file.
+ *
+ */
 export default function Home(props: HomeProps) {
   return (
     <div class={className("p-4 flex flex-col items-center")}>
@@ -42,6 +48,12 @@ export default function Home(props: HomeProps) {
   );
 }
 
+/*
+ *
+ * Run logic on the server and pass the result as props to the page component.
+ * Any functions invoked within getServerProps will only run on the server and are not included in the client bundle.
+ *
+ */
 export async function getServerProps(
   args: GetServerPropsParams
 ): Promise<HomeProps> {
