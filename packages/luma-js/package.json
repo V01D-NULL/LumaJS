@@ -1,0 +1,34 @@
+{
+  "name": "luma-js",
+  "version": "2.0.4",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/V01D-NULL/LumaJS.git"
+  },
+  "keywords": [
+    "framework"
+  ],
+  "author": "Tim Thompson",
+  "bugs": {
+    "url": "https://github.com/V01D-NULL/LumaJS/issues"
+  },
+  "homepage": "https://github.com/V01D-NULL/LumaJS#readme",
+  "files": [
+    "build/"
+  ],
+  "main": "build/html.js",
+  "types": "build/html.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -p ./tsconfig.json -w"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "snabbdom": "^3.5.1",
+    "snabbdom-to-html": "^7.1.0"
+  }
+}

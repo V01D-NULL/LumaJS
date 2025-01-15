@@ -1,0 +1,4 @@
+{
+  "source": "src",
+  "server": "src/server.ts"
+}

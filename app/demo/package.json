@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node bundle.js"
+    "dev": "luma dev",
+    "build": "luma build",
+    "start": "node .luma/server.js"
   },
+  "workspaces": [
+    "../../packages/luma-js",
+    "../../packages/luma-cli",
+    "../../packages/luma-router"
+  ],
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "chokidar": "^3.5.3",
-    "esbuild": "^0.19.4",
-    "live-server": "^1.2.2"
-  }
+  "license": "ISC"
 }
