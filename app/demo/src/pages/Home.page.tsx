@@ -3,6 +3,7 @@ import FastRandom from "../components/FastRandom";
 import Counter from "src/components/Counter";
 import ServerProps from "src/components/ServerProps";
 import type { GetServerPropsParams } from "luma-js";
+import { Hooks } from "src/components/Hooks";
 
 type HomeProps = {
   props: {
@@ -16,7 +17,7 @@ type HomeProps = {
  * Data fetching should be done in getServerProps and passed as props as demonstrated in this file.
  *
  */
-export default function Home(props: HomeProps) {
+export default function Home(props: Readonly<HomeProps>) {
   return (
     <div class={className("p-4 flex flex-col items-center")}>
       <h1 class={className("text-4xl font-bold mb-4")}>Hello, world :D</h1>
@@ -44,6 +45,8 @@ export default function Home(props: HomeProps) {
       <Counter />
       <br />
       <ServerProps props={props} />
+      <br />
+      <Hooks />
     </div>
   );
 }

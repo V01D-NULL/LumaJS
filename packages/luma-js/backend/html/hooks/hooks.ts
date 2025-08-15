@@ -1,5 +1,6 @@
-import { dispatch } from "../../../reconciler/reconcile";
+import { reconcile } from "../../../reconciler/reconcile";
 import { LumaCurrentComponent } from "../../../shared/component/current";
+import { LumaCurrentRootComponent } from "../../../shared/component/root";
 
 let hookIdx = 0;
 const hooks: any = [];
@@ -12,19 +13,66 @@ function registerHook<T>(state: T): void {
   hooks[hookIdx] ??= state;
 }
 
+let isRendering = false;
+let pendingUpdates: Function[] = [];
+
+function dispatch() {
+  if (isRendering || typeof window === "undefined") return;
+  isRendering = true;
+
+  hookIdx = 0; // Reset after the render cycle
+  const component =
+    LumaCurrentRootComponent.current.data?.luma.reconcileComponent();
+
+  LumaCurrentRootComponent.current = reconcile(
+    LumaCurrentRootComponent.current,
+    component!
+  );
+
+  isRendering = false;
+  // batchUpdates(); // Apply any pending state updates
+}
+
+function batchUpdates() {
+  while (pendingUpdates.length > 0) {
+    const update = pendingUpdates.shift();
+    update?.();
+  }
+}
+
 function useState<T>(initialState: T): [T, Function] {
   registerHook(initialState);
-
   const idx = hookIdx;
-  const component = LumaCurrentComponent.current!;
 
-  function setState(newState: T | (() => T)) {
-    hooks[idx] = newState instanceof Function ? newState() : newState;
-    hookIdx = 0;
-    dispatch(component);
+  function setState(newState: T | ((prev: T) => T)) {
+    pendingUpdates.push(() => {
+      hooks[idx] =
+        newState instanceof Function ? newState(hooks[idx]) : newState;
+      dispatch();
+    });
+
+    if (!isRendering) {
+      batchUpdates();
+    }
   }
 
   return [hooks[hookIdx++], setState];
 }
 
-export { useState };
+function useEffect<T>(callback: () => T, deps: any[]): void {
+  registerHook(deps);
+  const idx = hookIdx;
+
+  const oldDeps = hooks[hookIdx++];
+  if (!oldDeps?.every((dep: any, idx: number) => dep === deps[idx])) {
+    hooks[idx] = deps;
+    callback();
+  }
+}
+
+function useId(): string {
+  const uuid = crypto.randomUUID();
+  return useState(uuid)[0];
+}
+
+export { useState, useEffect, useId };

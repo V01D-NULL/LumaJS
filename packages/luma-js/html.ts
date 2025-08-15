@@ -4,8 +4,7 @@ import { VNode, VNodeData } from "snabbdom";
 import { hydrateRoot } from "./reconciler/hydrate";
 
 export { render };
-export { useMount, useState } from "./backend/html/hooks";
-
+export * from "./backend/html/hooks";
 export * from "./types/ssr.types";
 
 export default {
