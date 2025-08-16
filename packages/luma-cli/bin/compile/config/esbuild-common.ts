@@ -1,6 +1,6 @@
 export default {
   common: {
-    minify: !true, // TODO: Use env var to toggle
+    minify: true, // TODO: Use env var to toggle
     bundle: true,
     treeShaking: true,
     sourcemap: !true, // TODO: Use env var to toggle
