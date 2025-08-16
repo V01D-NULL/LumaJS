@@ -2,5 +2,20 @@
   "name": "LumaJS",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "lerna run build",
+    "watch": "lerna watch -- lerna run build --scope=\\$LERNA_PACKAGE_NAME",
+    "publish": "lerna publish from-package"
+  },
+  "workspaces": [
+    "packages/luma-js",
+    "packages/luma-cli",
+    "packages/luma-router"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "lerna": "^8.1.9",
+    "nx": "20.3.1"
+  }
 }

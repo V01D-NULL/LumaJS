@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./*"]
+    },
     "jsx": "preserve",
     "module": "ESNext",
     "target": "ESNext",
@@ -7,6 +11,6 @@
     "strict": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*", "../../package/build/types/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
