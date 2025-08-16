@@ -61,7 +61,11 @@ function useEffect<T>(callback: () => T, deps: any[]): void {
   const idx = hookIdx;
 
   const oldDeps = hooks[hookIdx++];
-  if (!oldDeps?.every((dep: any, idx: number) => dep === deps[idx])) {
+  const shouldRunEffect =
+    !oldDeps ||
+    oldDeps.length !== deps.length ||
+    !oldDeps.every((dep: any, idx: number) => dep === deps[idx]);
+  if (shouldRunEffect) {
     hooks[idx] = deps;
     callback();
   }
