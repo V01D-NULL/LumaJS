@@ -76,4 +76,9 @@ function useId(): string {
   return useState(uuid)[0];
 }
 
-export { useState, useEffect, useId };
+function useRef<T>(initialValue: T): { current: T } {
+  registerHook({ current: initialValue });
+  return hooks[hookIdx++];
+}
+
+export { useState, useEffect, useId, useRef };
