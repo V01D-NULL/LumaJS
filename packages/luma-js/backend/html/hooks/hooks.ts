@@ -30,7 +30,7 @@ function dispatch() {
   );
 
   isRendering = false;
-  // batchUpdates(); // Apply any pending state updates
+  batchUpdates();
 }
 
 function batchUpdates() {
@@ -48,12 +48,9 @@ function useState<T>(initialState: T): [T, Function] {
     pendingUpdates.push(() => {
       hooks[idx] =
         newState instanceof Function ? newState(hooks[idx]) : newState;
-      dispatch();
     });
 
-    if (!isRendering) {
-      batchUpdates();
-    }
+    dispatch();
   }
 
   return [hooks[hookIdx++], setState];
