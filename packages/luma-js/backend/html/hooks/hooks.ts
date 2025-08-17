@@ -85,4 +85,37 @@ function useRef<T>(initialValue: T): { current: T } {
   return hooks[hookIdx++];
 }
 
-export { useState, useEffect, useId, useRef };
+function createContext<T>(defaultValue: T) {
+  const context = {
+    value: defaultValue,
+    Provider: ({
+      children,
+      value,
+    }: {
+      children: JSX.Element;
+      value: T;
+    }): JSX.Element => {
+      context.value = value;
+      return children;
+    },
+    Consumer: ({
+      children,
+    }: {
+      children: (value: T) => JSX.Element;
+    }): JSX.Element => {
+      return children(context.value);
+    },
+  };
+
+  return context;
+}
+
+function useContext<T>(context: { value: T }): T {
+  if (!LumaCurrentComponent.current) {
+    throw new Error("useContext can only be called inside of components");
+  }
+
+  return context.value;
+}
+
+export { useState, useEffect, useId, useRef, createContext, useContext };
