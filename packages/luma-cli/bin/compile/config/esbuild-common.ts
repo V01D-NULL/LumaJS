@@ -1,6 +1,8 @@
+import { env } from "node:process";
+
 export default {
   common: {
-    minify: true, // TODO: Use env var to toggle
+    minify: env.NODE_ENV !== "LUMA_DEV", // TODO: Use env var to toggle
     bundle: true,
     treeShaking: true,
     sourcemap: !true, // TODO: Use env var to toggle
@@ -30,7 +32,9 @@ export default {
     jsxDev: true, // TODO: Use env var to toggle
     alias: {
       "react/jsx-dev-runtime":
-        "../../packages/luma-js/build/reconciler/createElement.js",
+        env.NODE_ENV === "LUMA_DEV"
+          ? "../../packages/luma-js/build/reconciler/createElement.js"
+          : "node_modules/luma-js/build/reconciler/createElement.js",
     },
     keepNames: true, // TODO: Use env var to toggle
   },

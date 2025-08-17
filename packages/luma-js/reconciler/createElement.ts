@@ -9,12 +9,12 @@ function createElement(
   self: DebugProps["self"] = null
 ) {
   const children = config.children;
-  delete config.children; // Remove children from config so it doesn't get passed as a prop
 
   // NOTE: It is safe to assume the data property is not null or undefined, making the non-null assertions safe.
   if (type instanceof Function) {
     LumaCurrentComponent.new({} as any);
     const fc = type(config, children);
+
     fc.data = {
       ...fc.data,
       hook: LumaCurrentComponent.current?.domHooks,
