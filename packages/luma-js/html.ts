@@ -24,15 +24,14 @@ type HostComponent = Pick<
 
 declare global {
   namespace JSX {
-    type Element = VNode;
+    type Element = VNode | PrimitiveChild | Array<VNode | PrimitiveChild>;
 
     interface ElementChildrenAttribute {
       children: {};
     }
 
-    // Based on the tag list in github:DefinitelyTyped/DefinitelyTyped:React
     interface IntrinsicElements {
-      [elemName: string]: HostComponent; // catch-all for now
+      [elemName: string]: HostComponent;
     }
   }
 
