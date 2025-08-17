@@ -22,11 +22,15 @@ function dispatch() {
 
   hookIdx = 0; // Reset after the render cycle
   const component =
-    LumaCurrentRootComponent.current.data?.luma.reconcileComponent();
+    LumaCurrentRootComponent.current.data?.luma?.reconcileComponent();
+
+  if (!component) {
+    throw new Error("Component not found for reconciliation");
+  }
 
   LumaCurrentRootComponent.current = reconcile(
     LumaCurrentRootComponent.current,
-    component!
+    component
   );
 
   isRendering = false;
