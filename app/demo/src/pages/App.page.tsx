@@ -1,9 +1,11 @@
 import { className } from "src/utils/classname";
-import FastRandom from "../components/FastRandom";
+import FastRandom from "src/components/FastRandom";
 import Counter from "src/components/Counter";
 import ServerProps from "src/components/ServerProps";
+import Hooks from "src/components/Hooks";
 import type { GetServerPropsParams } from "luma-js";
-import { Hooks } from "src/components/Hooks";
+import styles from "./App.module.scss";
+import VanillaExtract from "src/components/VanillaExtract";
 
 type HomeProps = {
   props: {
@@ -17,28 +19,20 @@ type HomeProps = {
  * Data fetching should be done in getServerProps and passed as props as demonstrated in this file.
  *
  */
-export default function Home(props: Readonly<HomeProps>) {
+export default function App(props: Readonly<HomeProps>) {
   return (
-    <div class={className("p-4 flex flex-col items-center")}>
-      <h1 class={className("text-4xl font-bold mb-4")}>Hello, world :D</h1>
-      <p
-        class={className(
-          "text-center bg-red-500 text-white p-4 rounded mb-4 w-full"
-        )}
-      >
-        Red banner!
-      </p>
-      <a
-        class={className("text-blue-500 underline mb-2")}
-        attrs={{ href: "/about" }}
-      >
+    <div class={className(styles.container)}>
+      <h1 class={className(styles.title)}>Hello, world :D</h1>
+      <p class={className(styles.redBanner)}>Red banner!</p>
+      <a class={className(styles.link)} attrs={{ href: "/about" }}>
         About
       </a>
-      <a
-        class={className("text-blue-500 underline mb-4")}
-        attrs={{ href: "/foo" }}
-      >
+      <a class={className(styles.linkHeavy)} attrs={{ href: "/foo" }}>
         This is 404!
+      </a>
+      <a class={className(styles.linkHeavy)} attrs={{ href: "/error-example" }}>
+        This page will throw, and luma-router will redirect to the
+        error.page.tsx component.
       </a>
       <FastRandom />
       <br />
@@ -47,6 +41,12 @@ export default function Home(props: Readonly<HomeProps>) {
       <ServerProps props={props} />
       <br />
       <Hooks />
+      <br />
+      <br />
+      In addition to scss modules, you can also style components with vanilla
+      extract:
+      <br />
+      <VanillaExtract />
     </div>
   );
 }

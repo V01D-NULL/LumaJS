@@ -15,5 +15,8 @@
   ],
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "clsx": "^2.1.1"
+  }
 }

@@ -1,10 +1,11 @@
+import sassPlugin from "esbuild-sass-plugin";
 import { env } from "node:process";
 
 export default {
   common: {
     minify: env.NODE_ENV !== "LUMA_DEV", // TODO: Use env var to toggle
     bundle: true,
-    treeShaking: true,
+    treeShaking: !true,
     sourcemap: !true, // TODO: Use env var to toggle
   },
 
@@ -13,6 +14,9 @@ export default {
     loader: {
       ".ts": "ts",
       ".tsx": "tsx",
+      ".scss": "css",
+      ".png": "file",
+      ".svg": "file",
     },
   },
 
@@ -21,6 +25,9 @@ export default {
     loader: {
       ".ts": "ts",
       ".tsx": "tsx",
+      ".scss": "css",
+      ".png": "file",
+      ".svg": "file",
     },
   },
 

@@ -28,13 +28,14 @@ function dispatch() {
     throw new Error("Component not found for reconciliation");
   }
 
+  // requestAnimationFrame(
+  //   () =>
   LumaCurrentRootComponent.current = reconcile(
     LumaCurrentRootComponent.current,
     component
   );
 
   isRendering = false;
-  batchUpdates();
 }
 
 function batchUpdates() {
@@ -52,9 +53,12 @@ function useState<T>(initialState: T): [T, Function] {
     pendingUpdates.push(() => {
       hooks[idx] =
         newState instanceof Function ? newState(hooks[idx]) : newState;
+      dispatch();
     });
 
-    dispatch();
+    if (typeof window !== "undefined") {
+      requestIdleCallback(batchUpdates);
+    }
   }
 
   return [hooks[hookIdx++], setState];
