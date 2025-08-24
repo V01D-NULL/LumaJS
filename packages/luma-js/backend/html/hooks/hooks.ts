@@ -28,14 +28,10 @@ function dispatch() {
     throw new Error("Component not found for reconciliation");
   }
 
-  requestAnimationFrame(
-    () =>
-      (LumaCurrentRootComponent.current = reconcile(
-        LumaCurrentRootComponent.current,
-        component
-      ))
+  LumaCurrentRootComponent.current = reconcile(
+    LumaCurrentRootComponent.current,
+    component
   );
-
   isRendering = false;
 }
 
