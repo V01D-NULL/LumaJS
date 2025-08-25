@@ -154,6 +154,9 @@ export class Compile {
         sassPlugin({ cssImports: true, type: "local-css" }),
         vanillaExtractPlugin(),
       ],
+      banner: {
+        js: `globalThis.window ??= undefined;`,
+      },
     });
   }
 

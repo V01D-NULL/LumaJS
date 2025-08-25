@@ -5,7 +5,7 @@ export default {
   common: {
     minify: env.NODE_ENV !== "LUMA_DEV", // TODO: Use env var to toggle
     bundle: true,
-    treeShaking: !true,
+    treeShaking: true,
     sourcemap: !true, // TODO: Use env var to toggle
   },
 
