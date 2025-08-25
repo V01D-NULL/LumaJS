@@ -3,7 +3,7 @@ import EsbuildCommon from "./config/esbuild-common";
 import { getPageFiles } from "./utils";
 import esbuild from "esbuild";
 import { removeGetServerPropsPlugin } from "./config/esbuild-plugins";
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import sassPlugin from "esbuild-sass-plugin";
 import { vanillaExtractPlugin } from "@vanilla-extract/esbuild-plugin";
 
@@ -76,6 +76,25 @@ export class Compile {
           server: { refs: null },
           client: { refs: null },
         };
+
+        mkdirSync(
+          path.dirname(
+            `.luma/pages/server/${
+              filePath.split("/")[filePath.split("/").length - 1]
+            }`
+          ),
+          { recursive: true }
+        );
+
+        mkdirSync(
+          path.dirname(
+            `.luma/pages/client/${
+              filePath.split("/")[filePath.split("/").length - 1]
+            }`
+          ),
+          { recursive: true }
+        );
+
         writeFileSync(
           `.luma/pages/server/${
             filePath.split("/")[filePath.split("/").length - 1]
