@@ -1,6 +1,6 @@
 {
   "name": "luma-router",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "node.js router for luma-js SSR",
   "main": "build/index.js",
   "scripts": {

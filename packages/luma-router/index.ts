@@ -28,8 +28,8 @@ async function renderPage(
   }
 
   const layoutFilePath = "./pages/server/layout.js";
-  const { default: LayoutComponent } = await import(layoutFilePath);
-  const { default: ServerComponent, getServerProps } = await import(serverPath);
+  const { default: LayoutComponent } = require(layoutFilePath);
+  const { default: ServerComponent, getServerProps } = require(serverPath);
 
   const serverProps = await getServerProps?.({
     searchParams: urlObj.searchParams,
@@ -42,8 +42,8 @@ async function renderPage(
     res,
     clientBundle,
     serverProps,
-    ServerComponent.default,
-    LayoutComponent.default,
+    ServerComponent,
+    LayoutComponent,
     page.cssBundle
   );
 }
@@ -73,10 +73,10 @@ async function renderErrorPage(
   }
 
   const path = `./${serverPageRef.split("/").slice(1).join("/")}`;
-  const { default: ServerComponent, getServerProps } = await import(path);
+  const { default: ServerComponent, getServerProps } = require(path);
 
   const layoutFilePath = "./pages/server/layout.js";
-  const { default: LayoutComponent } = await import(layoutFilePath);
+  const { default: LayoutComponent } = require(layoutFilePath);
 
   const searchParams = new URLSearchParams();
   if (err) {
@@ -94,8 +94,8 @@ async function renderErrorPage(
     res,
     clientBundle,
     serverProps,
-    ServerComponent.default,
-    LayoutComponent.default,
+    ServerComponent,
+    LayoutComponent,
     errorConfig.cssBundle ?? ""
   );
 }
