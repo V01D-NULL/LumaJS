@@ -191,6 +191,10 @@ export class Compile {
       ...EsbuildCommon.jsx,
       entryPoints: [`${this.LumaConfig.source}/pages/layout.tsx`],
       outfile: ".luma/pages/server/layout.js",
+      plugins: [
+        sassPlugin({ cssImports: true, type: "local-css" }),
+        vanillaExtractPlugin(),
+      ],
     });
   }
 
