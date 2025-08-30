@@ -1,9 +1,10 @@
 import type { ServerResponse } from "http";
 import fs from "fs";
 import { htmlify } from "./htmlify";
+import { FastifyReply } from "fastify";
 
 function respondOk(
-  res: ServerResponse,
+  res: FastifyReply,
   clientBundle: string,
   serverProps: any,
   component: ({ props }: { props: any }) => any /* VNode */,
@@ -35,8 +36,7 @@ function respondOk(
 
   `;
 
-  res.writeHead(200, { "Content-Type": "text/html" });
-  res.end(html);
+  res.type("text/html").status(200).send(html);
 }
 
 export { respondOk };

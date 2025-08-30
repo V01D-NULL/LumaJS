@@ -1,11 +1,15 @@
-import http from "http";
+import Fastify, {
+  FastifyInstance,
+  FastifyRequest,
+  FastifyReply,
+} from "fastify";
 import fs from "fs";
 import { respondOk } from "./util/respond";
 import { PageMapping } from "./types/pageMapping.types";
 
 async function renderPage(
   requestUrl: string,
-  res: http.ServerResponse<http.IncomingMessage>,
+  reply: FastifyReply,
   page: PageMapping
 ) {
   if (!page.server.refs || !page.client.refs) {
@@ -39,7 +43,7 @@ async function renderPage(
   const clientBundle = fs.readFileSync(clientPath).toString();
 
   respondOk(
-    res,
+    reply,
     clientBundle,
     serverProps,
     ServerComponent,
@@ -49,7 +53,7 @@ async function renderPage(
 }
 
 async function renderErrorPage(
-  res: http.ServerResponse<http.IncomingMessage>,
+  reply: FastifyReply,
   is404Error: boolean,
   errorConfig: PageMapping,
   requestUrl: string,
@@ -91,7 +95,7 @@ async function renderErrorPage(
   const clientBundle = fs.readFileSync(clientPageRef).toString();
 
   respondOk(
-    res,
+    reply,
     clientBundle,
     serverProps,
     ServerComponent,
@@ -100,45 +104,107 @@ async function renderErrorPage(
   );
 }
 
-const server = http.createServer(async (req, res) => {
-  if (req.url === "/favicon.ico" || !req.url) {
-    return res.end();
-  }
+async function createServer(): Promise<FastifyInstance> {
+  const fastify = Fastify({
+    logger: {
+      // transport: {
+      //   target: "pino-pretty",
+      // },
+    },
+  });
 
-  console.log(`[${req.method?.toUpperCase()}] ${req.url}`);
-  const allPages = JSON.parse(fs.readFileSync(".luma/pages.json").toString());
-  try {
-    const page: PageMapping = allPages[req.url];
-    if (!page) {
-      if (!req.url.endsWith(".css")) {
-        await renderErrorPage(res, true, allPages["/_error"], req.url, null);
+  // Handle favicon requests
+  fastify.get(
+    "/favicon.ico",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      return reply.code(204).send();
+    }
+  );
+
+  // Handle all other routes
+  fastify.get("/*", async (request: FastifyRequest, reply: FastifyReply) => {
+    const allPages = JSON.parse(fs.readFileSync(".luma/pages.json").toString());
+
+    // Handle CSS files
+    if (request.url && request.url.endsWith(".css")) {
+      try {
+        const fileContents = fs
+          .readFileSync(`.luma/pages/server${request.url}`)
+          .toString();
+
+        reply.type("text/css");
+        return reply.send(fileContents);
+      } catch (err) {
+        console.error("CSS file not found:", request.url);
+        return reply.code(404).send("CSS file not found");
+      }
+    }
+
+    try {
+      const page: PageMapping = allPages[request.url];
+
+      if (!page) {
+        await renderErrorPage(
+          reply,
+          true,
+          allPages["/_error"],
+          request.url,
+          null
+        );
         return;
       }
 
-      const fileContents = fs
-        .readFileSync(`.luma/pages/server/${req.url}`)
-        .toString();
+      if (!page.server.refs) {
+        throw new Error("no refs for page");
+      }
 
-      return res.end(fileContents);
+      await renderPage(request.url, reply, page);
+    } catch (err: any) {
+      fastify.log.error("Encountered exception: ", err);
+      await renderErrorPage(
+        reply,
+        false,
+        allPages["/_error"],
+        request.url,
+        err
+      );
     }
+  });
 
-    if (!page.server.refs) {
-      throw new Error("no refs for page");
-    }
+  return fastify;
+}
 
-    await renderPage(req.url, res, page);
-  } catch (err: any) {
-    console.error("Encountered exception: ", err);
-    return await renderErrorPage(res, false, allPages["/_error"], req.url, err);
+// For AWS Lambda
+let serverInstance: FastifyInstance | null = null;
+
+const getServerInstance = async (): Promise<FastifyInstance> => {
+  if (!serverInstance) {
+    serverInstance = await createServer();
+    await serverInstance.ready();
   }
-});
-
-const startServer = (port?: number, callback?: () => void) => {
-  const defaultPort = 3000;
-  const defaultCallback = () =>
-    console.log(`Server running at http://localhost:${port ?? defaultPort}/`);
-
-  server.listen(port ?? defaultPort, callback ?? defaultCallback);
+  return serverInstance;
 };
 
-export { startServer };
+// For local development
+const startServer = async (port?: number, host?: string) => {
+  const defaultPort = 3000;
+  const defaultHost = "localhost";
+
+  try {
+    const fastify = await createServer();
+
+    await fastify.listen({
+      port: port ?? defaultPort,
+      host: host ?? defaultHost,
+    });
+
+    console.log(
+      `Server running at http://${host ?? defaultHost}:${port ?? defaultPort}/`
+    );
+  } catch (err) {
+    console.error("Error starting server:", err);
+    process.exit(1);
+  }
+};
+
+export { startServer, getServerInstance };
