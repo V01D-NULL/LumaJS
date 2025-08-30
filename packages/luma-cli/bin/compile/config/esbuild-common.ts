@@ -15,8 +15,6 @@ export default {
       ".ts": "ts",
       ".tsx": "tsx",
       ".scss": "css",
-      ".png": "file",
-      ".svg": "file",
     },
   },
 
@@ -26,14 +24,15 @@ export default {
       ".ts": "ts",
       ".tsx": "tsx",
       ".scss": "css",
-      ".png": "file",
-      ".svg": "file",
     },
   },
 
   jsx: {
     loader: {
       ".tsx": "tsx",
+      ".svg": "dataurl",
+      ".png": "dataurl",
+      ".webp": "dataurl",
     },
     jsx: "automatic",
     jsxDev: true, // TODO: Use env var to toggle
