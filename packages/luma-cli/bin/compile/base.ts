@@ -191,6 +191,9 @@ export class Compile {
       ...EsbuildCommon.jsx,
       entryPoints: [`${this.LumaConfig.source}/pages/layout.tsx`],
       outfile: ".luma/pages/server/layout.js",
+      banner: {
+        js: "globalThis.window = undefined;",
+      },
       plugins: [
         sassPlugin({ cssImports: true, type: "local-css" }),
         vanillaExtractPlugin(),
