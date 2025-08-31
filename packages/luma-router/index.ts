@@ -174,7 +174,6 @@ async function createServer(): Promise<FastifyInstance> {
   return fastify;
 }
 
-// For AWS Lambda
 let serverInstance: FastifyInstance | null = null;
 
 const getServerInstance = async (): Promise<FastifyInstance> => {
@@ -185,7 +184,6 @@ const getServerInstance = async (): Promise<FastifyInstance> => {
   return serverInstance;
 };
 
-// For local development
 const startServer = async (port?: number, host?: string) => {
   const defaultPort = 3000;
   const defaultHost = "localhost";
