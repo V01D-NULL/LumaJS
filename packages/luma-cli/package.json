@@ -1,6 +1,6 @@
 {
   "name": "luma-cli",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "luma-js cli",
   "main": "index.js",
   "scripts": {
