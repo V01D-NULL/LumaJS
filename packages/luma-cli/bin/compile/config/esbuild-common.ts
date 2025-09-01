@@ -1,12 +1,11 @@
-import sassPlugin from "esbuild-sass-plugin";
 import { env } from "node:process";
 
 export default {
   common: {
-    minify: env.NODE_ENV !== "LUMA_DEV", // TODO: Use env var to toggle
+    minify: env.LUMA_DEV === "false",
     bundle: true,
     treeShaking: true,
-    sourcemap: !true, // TODO: Use env var to toggle
+    sourcemap: env.LUMA_DEV === "false", // TODO: Use env var to toggle
   },
 
   server: {
@@ -38,7 +37,7 @@ export default {
     jsxDev: true, // TODO: Use env var to toggle
     alias: {
       "react/jsx-dev-runtime":
-        env.NODE_ENV === "LUMA_DEV"
+        env.LUMA_DEV === "true"
           ? "../../packages/luma-js/build/reconciler/createElement.js"
           : "node_modules/luma-js/build/reconciler/createElement.js",
     },

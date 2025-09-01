@@ -6,6 +6,7 @@ import { removeGetServerPropsPlugin } from "./config/esbuild-plugins";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import sassPlugin from "esbuild-sass-plugin";
 import { vanillaExtractPlugin } from "@vanilla-extract/esbuild-plugin";
+import esbuildPluginPino from "esbuild-plugin-pino";
 
 export class Compile {
   private readonly LumaConfig: any;
@@ -39,7 +40,8 @@ export class Compile {
       ...EsbuildCommon.common,
       ...EsbuildCommon.server,
       entryPoints: [this.LumaConfig.server],
-      outfile: ".luma/server.js",
+      plugins: [esbuildPluginPino({ transports: ["pino-pretty"] })],
+      outdir: ".luma",
     });
   }
   private async compileFramework() {

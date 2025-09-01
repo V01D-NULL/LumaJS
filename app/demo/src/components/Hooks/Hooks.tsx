@@ -66,11 +66,12 @@ export default function Hooks() {
       </p>
       Change Ref Value:
       <br />
-      <input
+      <div attrs={{ ref: ref }}></div>
+      {/* <input
         class={className(styles.input)}
         attrs={{ value: ref.current }}
         on={{ input: (e) => (ref.current = e.target.value) }}
-      />
+      /> */}
     </div>
   );
 }

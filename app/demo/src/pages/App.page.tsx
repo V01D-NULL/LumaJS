@@ -6,12 +6,38 @@ import Hooks from "src/components/Hooks";
 import type { GetServerPropsParams } from "luma-js";
 import styles from "./App.module.scss";
 import VanillaExtract from "src/components/VanillaExtract";
+import { notFound, redirect } from "luma-router/routing";
+import { Metadata } from "luma-router/types/metadata.types";
 
 type HomeProps = {
   props: {
     hello: string;
   };
 };
+
+/*
+ * Generate page metadata statically via an object export
+ * or dynamically with a server side invoked function
+ */
+// export const metadata: Metadata = {
+//   title: "My Title",
+//   description: "My Description",
+//   keywords: ["keyword a", "keyword b"],
+// };
+// or
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: URLSearchParams;
+}): Promise<Metadata> {
+  console.log("Generate Metadata Request", searchParams);
+
+  return {
+    title: "My Title",
+    description: "My Description",
+    keywords: ["keyword a", "keyword b"],
+  };
+}
 
 /*
  *
@@ -61,6 +87,10 @@ export async function getServerProps(
   args: GetServerPropsParams
 ): Promise<HomeProps> {
   console.log("getServerProps", args.searchParams.get("foo"), args.uri);
+
+  // Server side routing is made possible through function calls:
+  // await redirect("/about");
+  // await notFound();
 
   return {
     props: {
