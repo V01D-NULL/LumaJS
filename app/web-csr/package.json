@@ -1,0 +1,20 @@
+{
+  "name": "web-csr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsx build.ts"
+  },
+  "workspaces": [
+    "../../packages/luma-js"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.25.9",
+    "esbuild-sass-plugin": "^3.3.1",
+    "tsx": "^4.20.5"
+  }
+}
