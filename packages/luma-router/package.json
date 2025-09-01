@@ -1,6 +1,6 @@
 {
   "name": "luma-router",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "node.js router for luma-js SSR",
   "main": "build/index.js",
   "scripts": {
@@ -25,7 +25,6 @@
   "homepage": "https://github.com/V01D-NULL/LumaJS#readme",
   "devDependencies": {
     "@types/node": "^20.10.8",
-    "pino-pretty": "^13.1.1",
     "tsx": "^4.20.5",
     "typescript": "^5.3.3"
   },
@@ -34,6 +33,7 @@
     "cheerio": "^1.1.2",
     "fastify": "^5.5.0",
     "pino": "^9.9.0",
+    "pino-pretty": "^13.1.1",
     "snabbdom-to-html": "^7.1.0"
   }
 }
