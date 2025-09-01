@@ -3,6 +3,10 @@ import EsbuildCommon from "./config/esbuild-common";
 import { getPageFiles } from "./utils";
 import esbuild from "esbuild";
 import { removeGetServerPropsPlugin } from "./config/esbuild-plugins";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import sassPlugin from "esbuild-sass-plugin";
+import { vanillaExtractPlugin } from "@vanilla-extract/esbuild-plugin";
+import esbuildPluginPino from "esbuild-plugin-pino";
 
 export class Compile {
   private readonly LumaConfig: any;
@@ -20,6 +24,7 @@ export class Compile {
         this.compileFramework(),
         this.compileLayout(),
         this.compilePages(),
+        this.compileCss(),
       ]);
       console.log("[+] Done!");
     } catch (error) {
@@ -35,7 +40,8 @@ export class Compile {
       ...EsbuildCommon.common,
       ...EsbuildCommon.server,
       entryPoints: [this.LumaConfig.server],
-      outfile: ".luma/server.js",
+      plugins: [esbuildPluginPino({ transports: ["pino-pretty"] })],
+      outdir: ".luma",
     });
   }
   private async compileFramework() {
@@ -53,8 +59,59 @@ export class Compile {
   private async compilePages() {
     console.log("[*] Gathering & building SSR pages...");
 
-    // Build individual page files
+    const pageMapping: Record<
+      string,
+      {
+        cssBundle: string | null;
+        server: { refs: string[] | null };
+        client: { refs: string[] | null };
+      }
+    > = {};
+
     for (const filePath of this.pages) {
+      const url = `/${filePath.split("/").slice(2, -1).join("/")}`; // Remove src/pages and the *.page.tsx to get the URL
+
+      if (!filePath.endsWith(".tsx")) {
+        const fileUrl = `/${filePath.split("/").slice(2).join("/")}`;
+        pageMapping[fileUrl] = {
+          cssBundle: null,
+          server: { refs: null },
+          client: { refs: null },
+        };
+
+        mkdirSync(
+          path.dirname(
+            `.luma/pages/server/${
+              filePath.split("/")[filePath.split("/").length - 1]
+            }`
+          ),
+          { recursive: true }
+        );
+
+        mkdirSync(
+          path.dirname(
+            `.luma/pages/client/${
+              filePath.split("/")[filePath.split("/").length - 1]
+            }`
+          ),
+          { recursive: true }
+        );
+
+        writeFileSync(
+          `.luma/pages/server/${
+            filePath.split("/")[filePath.split("/").length - 1]
+          }`,
+          readFileSync(filePath).toString()
+        );
+        writeFileSync(
+          `.luma/pages/client/${
+            filePath.split("/")[filePath.split("/").length - 1]
+          }`,
+          readFileSync(filePath).toString()
+        );
+        continue;
+      }
+
       const getPath = (type: "client" | "server") =>
         path.join(`.luma/pages/${type}/`, relativePath.replace(".tsx", ".js"));
 
@@ -66,11 +123,26 @@ export class Compile {
       const outPathClient = getPath("client");
       const outPathServer = getPath("server");
 
+      const cssBundle = relativePath.replace(".tsx", ".css");
       console.log(`[*] Building ${outPathClient}`);
 
       await this.compileServerPage(filePath, outPathServer);
       await this.compileClientPage(filePath, outPathClient);
+
+      if (pageMapping[url]) {
+        pageMapping[url].cssBundle ??= cssBundle;
+        pageMapping[url].server.refs?.push(outPathServer);
+        pageMapping[url].client.refs?.push(outPathClient);
+      } else {
+        pageMapping[url] = {
+          cssBundle: relativePath.includes("layout") ? null : cssBundle,
+          server: { refs: [outPathServer] },
+          client: { refs: [outPathClient] },
+        };
+      }
     }
+
+    writeFileSync(".luma/pages.json", JSON.stringify(pageMapping, null, 2));
   }
 
   private async compileServerPage(filePath: string, outfile: string) {
@@ -80,6 +152,13 @@ export class Compile {
       ...EsbuildCommon.jsx,
       entryPoints: [filePath],
       outfile,
+      plugins: [
+        sassPlugin({ cssImports: true, type: "local-css" }),
+        vanillaExtractPlugin(),
+      ],
+      banner: {
+        js: `globalThis.window ??= undefined;`,
+      },
     });
   }
 
@@ -89,14 +168,18 @@ export class Compile {
       ...EsbuildCommon.client,
       ...EsbuildCommon.jsx,
 
-      plugins: [removeGetServerPropsPlugin],
+      plugins: [
+        removeGetServerPropsPlugin,
+        sassPlugin({ cssImports: true, type: "local-css" }),
+        vanillaExtractPlugin(),
+      ],
       entryPoints: [filePath],
       outfile,
       globalName: "__LUMA_ROOT__",
       format: "iife",
       inject: [path.resolve(__dirname, "static/luma-shim.js")],
       banner: {
-        js: "if (!window.__LUMA_FRAMEWORK__) window.__LUMA_FRAMEWORK__ = {};", // stub global framework instance if it does not yet exist
+        js: "window.__LUMA_FRAMEWORK__ ??= {};", // stub global framework instance if it does not yet exist
       },
     });
   }
@@ -110,6 +193,15 @@ export class Compile {
       ...EsbuildCommon.jsx,
       entryPoints: [`${this.LumaConfig.source}/pages/layout.tsx`],
       outfile: ".luma/pages/server/layout.js",
+      banner: {
+        js: "globalThis.window = undefined;",
+      },
+      plugins: [
+        sassPlugin({ cssImports: true, type: "local-css" }),
+        vanillaExtractPlugin(),
+      ],
     });
   }
+
+  private async compileCss() {}
 }

@@ -1,6 +1,6 @@
 import { useMount, useState } from "luma-js";
 import { className } from "src/utils/classname";
-
+import styles from "./FastRandom.module.scss";
 /*
  *  Demonstrates how fast LumaJS can update the DOM.
  *
@@ -15,15 +15,9 @@ function FastRandom() {
   }, 1);
 
   return (
-    <div
-      class={className(
-        "p-4 max-w-sm mx-auto bg-white rounded-xl shadow-md space-y-4"
-      )}
-    >
-      <div class={className("text-center text-xl font-medium text-black")}>
-        Fast Random
-      </div>
-      <div class={className("text-center text-gray-500")}>
+    <div class={className(styles.card)}>
+      <div class={className(styles.body)}>Fast Random</div>
+      <div class={className(styles.title)}>
         <code>Math.random()</code> every 1ms:
         <br />
         {random}

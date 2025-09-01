@@ -9,7 +9,7 @@ export function getPageFiles(dir: string, fileList: string[] = []) {
     const filePath = path.join(dir, file);
     if (fs.statSync(filePath).isDirectory()) {
       getPageFiles(filePath, fileList);
-    } else if (file.includes("page") && file.endsWith(".tsx")) {
+    } else if (file.endsWith(".tsx") && file !== "layout.tsx") {
       fileList.push(filePath);
     }
   });

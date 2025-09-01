@@ -1,7 +1,8 @@
 import { useState, useEffect, useId, useMount, useRef } from "luma-js";
 import { className } from "src/utils/classname";
+import styles from "./Hooks.module.scss";
 
-export function Hooks() {
+export default function Hooks() {
   const [count, setCount] = useState(0);
   const [name, setName] = useState("John");
   const id = useId();
@@ -25,34 +26,39 @@ export function Hooks() {
   });
 
   return (
-    <div>
-      <h1 class={className("text-4xl")}>All hooks implemented in luma:</h1>
+    <div class={className(styles.container)}>
+      <h1 class={className(styles.h1Large)}>All hooks implemented in luma:</h1>
       <br />
-      <h1 class={className("text-2xl")}>useState:</h1>
-      <p class={className("text-sm")}>
+      <h1 class={className(styles.h1Medium)}>useState:</h1>
+      <p class={className(styles.textSm)}>
         Click 'Increment' to add one to the counter
       </p>
-      <h3 class={className("text-lg")}>{count}</h3>
-      <button on={{ click: () => setCount(count + 1) }}>Increment</button>
+      <h3 class={className(styles.textLg)}>{count}</h3>
+      <button
+        class={className(styles.button)}
+        on={{ click: () => setCount(count + 1) }}
+      >
+        Increment
+      </button>
       <br />
       <br />
-      <h1 class={className("text-2xl")}>useEffect:</h1>
-      <p class={className("text-sm")}>
+      <h1 class={className(styles.h1Medium)}>useEffect:</h1>
+      <p class={className(styles.textSm)}>
         Appends the above count to "John" by listening for state changes of
         'count'
       </p>
-      <h3 class={className("text-lg")}>{name}</h3>
+      <h3 class={className(styles.textLg)}>{name}</h3>
       <br />
       <br />
-      <h1 class={className("text-2xl")}>useId:</h1>
-      <p class={className("text-sm")}>
+      <h1 class={className(styles.h1Medium)}>useId:</h1>
+      <p class={className(styles.textSm)}>
         Generate a persisted uuid across renders
       </p>
-      <h3 class={className("text-lg")}>{id}</h3>
+      <h3 class={className(styles.textLg)}>{id}</h3>
       <br />
       <br />
-      <h1 class={className("text-2xl")}>useRef:</h1>
-      <p class={className("text-sm")}>
+      <h1 class={className(styles.h1Medium)}>useRef:</h1>
+      <p class={className(styles.textSm)}>
         Create a ref that persists across renders. This is useful for storing
         values that do not trigger a re-render when changed. (Note: due to
         FastComponent rerendering every millisecond the ref will update
@@ -60,11 +66,12 @@ export function Hooks() {
       </p>
       Change Ref Value:
       <br />
-      <input
-        class={className("border p-2 rounded")}
+      <div attrs={{ ref: ref }}></div>
+      {/* <input
+        class={className(styles.input)}
         attrs={{ value: ref.current }}
         on={{ input: (e) => (ref.current = e.target.value) }}
-      />
+      /> */}
     </div>
   );
 }

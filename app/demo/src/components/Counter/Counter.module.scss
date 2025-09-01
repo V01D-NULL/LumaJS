@@ -1,0 +1,36 @@
+@import "../../styles/variables";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.primaryButton {
+  background-color: $button-primary-bg;
+  color: $button-primary-color;
+  padding: $btn-padding-vertical $btn-padding-horizontal;
+  border-radius: $btn-border-radius;
+  border: none;
+  cursor: pointer;
+}
+
+.btn {
+  background-color: $button-secondary-bg;
+  color: $button-secondary-color;
+  padding: $btn-padding-vertical $btn-padding-horizontal;
+  border-radius: $btn-border-radius;
+  border: none;
+  cursor: pointer;
+}
+
+.counterText {
+  font-size: 1.125rem;
+  font-weight: 600;
+}

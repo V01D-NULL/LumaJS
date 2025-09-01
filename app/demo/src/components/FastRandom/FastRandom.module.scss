@@ -1,0 +1,26 @@
+@import "../../styles/variables";
+
+.card {
+  padding: $card-padding;
+  max-width: $card-max-width;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: $card-bg;
+  border-radius: $card-border-radius;
+  box-shadow: $card-box-shadow;
+  display: flex;
+  flex-direction: column;
+  gap: $card-gap;
+}
+
+.title {
+  text-align: center;
+  font-size: $card-title-font-size;
+  font-weight: $card-title-font-weight;
+  color: $card-title-color;
+}
+
+.body {
+  text-align: center;
+  color: $card-body-color;
+}
