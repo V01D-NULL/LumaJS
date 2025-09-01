@@ -6,7 +6,7 @@ export default function Hooks() {
   const [count, setCount] = useState(0);
   const [name, setName] = useState("John");
   const id = useId();
-  const ref = useRef("My Custom Ref");
+  const ref = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     console.log("Count changed to", count);
@@ -60,18 +60,12 @@ export default function Hooks() {
       <h1 class={className(styles.h1Medium)}>useRef:</h1>
       <p class={className(styles.textSm)}>
         Create a ref that persists across renders. This is useful for storing
-        values that do not trigger a re-render when changed. (Note: due to
-        FastComponent rerendering every millisecond the ref will update
-        immediately)
+        values that do not trigger a re-render when changed.
       </p>
-      Change Ref Value:
+      Use ref to focus() on input field:
       <br />
-      <div attrs={{ ref: ref }}></div>
-      {/* <input
-        class={className(styles.input)}
-        attrs={{ value: ref.current }}
-        on={{ input: (e) => (ref.current = e.target.value) }}
-      /> */}
+      <input props={{ placeholder: "Placeholder text", ref }} />
+      <button on={{ click: () => ref.current?.focus() }}>Focus on input</button>
     </div>
   );
 }

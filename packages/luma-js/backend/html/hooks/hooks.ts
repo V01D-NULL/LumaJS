@@ -1,6 +1,7 @@
 import { reconcile } from "../../../reconciler/reconcile";
 import { LumaCurrentComponent } from "../../../shared/component/current";
 import { LumaCurrentRootComponent } from "../../../shared/component/root";
+import { Ref } from "../../../types/refObj.types";
 
 let hookIdx = 0;
 const hooks: any = [];
@@ -81,9 +82,12 @@ function useId(): string {
   return useState(uuid)[0];
 }
 
-function useRef<T>(initialValue: T): { current: T } {
-  registerHook({ current: initialValue });
-  return hooks[hookIdx++];
+function useRef<T>(initialValue: T): Ref<T> {
+  if (!LumaCurrentComponent.current) {
+    throw new Error("Hooks can only be called inside of components");
+  }
+
+  return { current: initialValue };
 }
 
 function createContext<T>(defaultValue: T) {
