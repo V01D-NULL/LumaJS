@@ -1,5 +1,6 @@
 import { LumaCurrentComponent } from "../shared/component/current";
 import { VNode, h } from "snabbdom";
+import { withRef } from "./refObj";
 
 function createElement(
   type: string | ((...args: any[]) => VNode),
@@ -29,9 +30,13 @@ function createElement(
     };
 
     LumaCurrentComponent.current!.node = fc;
-    LumaCurrentComponent.current!.ref = type.name;
+    LumaCurrentComponent.current!.name = type.name;
     LumaCurrentComponent.delete();
     return fc;
+  }
+
+  if (config.props?.ref) {
+    config = { ...config, ...withRef(config.props.ref) };
   }
 
   return h(type, config, children);

@@ -6,7 +6,7 @@ type CurrentComponent = {
 };
 
 type CurrentSingular = {
-  ref: string;
+  name: string;
   node: VNode;
   domHooks: DomHooks;
 };
