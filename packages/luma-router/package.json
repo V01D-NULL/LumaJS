@@ -1,6 +1,6 @@
 {
   "name": "luma-router",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "node.js router for luma-js SSR",
   "main": "build/index.js",
   "scripts": {
@@ -32,6 +32,7 @@
     "@fastify/sensible": "^6.0.3",
     "cheerio": "^1.1.2",
     "fastify": "^5.5.0",
+    "json-rpc-2.0": "^1.7.1",
     "pino": "^9.9.0",
     "pino-pretty": "^13.1.1",
     "snabbdom-to-html": "^7.1.0"

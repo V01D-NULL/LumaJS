@@ -8,6 +8,7 @@ import styles from "./App.module.scss";
 import VanillaExtract from "src/components/VanillaExtract";
 import { notFound, redirect } from "luma-router/routing";
 import { Metadata } from "luma-router/types/metadata.types";
+import Rpc from "src/components/Rpc";
 
 type HomeProps = {
   props: {
@@ -73,6 +74,9 @@ export default function App(props: Readonly<HomeProps>) {
       extract:
       <br />
       <VanillaExtract />
+      <br />
+      <br />
+      <Rpc />
     </div>
   );
 }
