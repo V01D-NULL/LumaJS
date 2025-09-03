@@ -9,7 +9,7 @@ export default (fastify: FastifyInstance) =>
         const result = await RpcServer.receiveJSON(request.body as string);
         reply.status(200).send(result);
       } catch (e) {
-        console.log(e);
+        fastify.log.error(e);
         reply.status(500).send("RPC call failed");
       }
     }
