@@ -1,4 +1,4 @@
-import { useState, useEffect, useId, useMount, useRef } from "luma-js";
+import { useState, useEffect, useId, useMount, useRef, withRef } from "luma-js";
 import { className } from "src/utils/classname";
 import styles from "./Hooks.module.scss";
 
@@ -17,13 +17,16 @@ export default function Hooks() {
     console.log("Name changed to", name);
   }, [name]);
 
-  useEffect(() => {
-    console.log(ref);
-  }, [ref.current]);
-
   useMount(() => {
     console.log("Hooks component mounted");
   });
+
+  // Refs are not bound to the rendering cycle which useEffect relies on.
+  // Therefore chagnes to ref objects cannot be listened to via 'useEffect'.
+  // Instead, a callback is invoked with the updated ref
+  const refChanged = (_ref: typeof ref) => {
+    console.log("ref changed", _ref);
+  };
 
   return (
     <div class={className(styles.container)}>
@@ -64,7 +67,12 @@ export default function Hooks() {
       </p>
       Use ref to focus() on input field:
       <br />
-      <input props={{ placeholder: "Placeholder text", ref }} />
+      <input
+        props={{
+          placeholder: "Placeholder text",
+          ...withRef(ref, refChanged),
+        }}
+      />
       <button on={{ click: () => ref.current?.focus() }}>Focus on input</button>
     </div>
   );

@@ -1,6 +1,7 @@
 import { LumaCurrentComponent } from "../shared/component/current";
 import { VNode, h } from "snabbdom";
 import { withRef } from "./refObj";
+import { withEffects } from "./effects";
 
 function createElement(
   type: string | ((...args: any[]) => VNode),
@@ -14,6 +15,8 @@ function createElement(
   // NOTE: It is safe to assume the data property is not null or undefined, making the non-null assertions safe.
   if (type instanceof Function) {
     LumaCurrentComponent.new({} as any);
+    LumaCurrentComponent.current!.hooks ??= [];
+    LumaCurrentComponent.current!.hookIdx = 0;
     const fc = type(config, children);
 
     fc.data = {
@@ -36,7 +39,10 @@ function createElement(
   }
 
   if (config.props?.ref) {
-    config = { ...config, ...withRef(config.props.ref) };
+    config = {
+      ...config,
+      ...withRef(config.props.ref, config.props.onRefUpdate),
+    };
   }
 
   return h(type, config, children);

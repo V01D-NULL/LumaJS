@@ -90,6 +90,10 @@ function useRef<T>(initialValue: T): Ref<T> {
   return { current: initialValue };
 }
 
+function withRef<T>(ref: Ref<T>, onRefUpdate?: (ref: Ref<T>) => void) {
+  return { ref, onRefUpdate };
+}
+
 function createContext<T>(defaultValue: T) {
   const context = {
     value: defaultValue,
@@ -123,4 +127,12 @@ function useContext<T>(context: { value: T }): T {
   return context.value;
 }
 
-export { useState, useEffect, useId, useRef, createContext, useContext };
+export {
+  useState,
+  useEffect,
+  useId,
+  useRef,
+  withRef,
+  createContext,
+  useContext,
+};
