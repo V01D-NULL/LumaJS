@@ -8,7 +8,9 @@ function Rpc() {
     <button
       on={{
         click: () =>
-          makeRpcCall("example-rpc", { message: "Hello, RPC-World!" }),
+          makeRpcCall("example-rpc", { message: "Hello, RPC-World!" }).then(
+            console.log
+          ),
       }}
     >
       Perform an RPC call

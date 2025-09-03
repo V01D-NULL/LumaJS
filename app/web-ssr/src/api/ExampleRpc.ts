@@ -6,7 +6,8 @@ import { RpcMethod } from "luma-router/rpc";
 export class ExampleRpc implements RpcMethod {
   public name = "example-rpc";
 
-  public handler(event: { message: string }): void {
+  public handler(event: { message: string }) {
     console.log("Received RPC message:", event.message);
+    return { my: "response" };
   }
 }
