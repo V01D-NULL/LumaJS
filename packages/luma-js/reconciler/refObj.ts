@@ -1,7 +1,7 @@
 import type { VNode } from "snabbdom";
 import type { Ref } from "../types/refObj.types";
 
-export function withRef<T>(ref: Ref<T>) {
+export function withRef<T>(ref: Ref<T>, onRefUpdate?: (ref: Ref<T>) => void) {
   const setRef = (value: unknown) => {
     if (value === null || value instanceof Node) {
       ref.current = value as T;

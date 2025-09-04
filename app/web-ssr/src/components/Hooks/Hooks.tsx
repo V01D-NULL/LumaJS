@@ -17,13 +17,15 @@ export default function Hooks() {
     console.log("Name changed to", name);
   }, [name]);
 
-  useEffect(() => {
-    console.log(ref);
-  }, [ref.current]);
-
   useMount(() => {
     console.log("Hooks component mounted");
   });
+
+  useEffect(() => {
+    if (ref.current) {
+      console.log("ref was changed to", ref.current);
+    }
+  }, [ref.current]);
 
   return (
     <div class={className(styles.container)}>
@@ -64,7 +66,12 @@ export default function Hooks() {
       </p>
       Use ref to focus() on input field:
       <br />
-      <input props={{ placeholder: "Placeholder text", ref }} />
+      <input
+        props={{
+          placeholder: "Placeholder text",
+          ref: ref,
+        }}
+      />
       <button on={{ click: () => ref.current?.focus() }}>Focus on input</button>
     </div>
   );

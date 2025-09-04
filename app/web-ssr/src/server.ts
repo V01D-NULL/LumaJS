@@ -1,4 +1,5 @@
 import { startServer, getServerInstance } from "luma-router";
+import Rpc from "./api";
 
 // Lambda handler
 const handler = async (event: any, context: any) => {
@@ -22,7 +23,7 @@ const handler = async (event: any, context: any) => {
 };
 
 if (process.env.SERVERLESS === "false") {
-  startServer();
+  startServer({ host: "localhost", port: 3000, rpcMethods: Rpc.rpcMethods });
 }
 
 export { handler };

@@ -36,7 +36,10 @@ function createElement(
   }
 
   if (config.props?.ref) {
-    config = { ...config, ...withRef(config.props.ref) };
+    config = {
+      ...config,
+      ...withRef(config.props.ref, config.props.onRefUpdate),
+    };
   }
 
   return h(type, config, children);

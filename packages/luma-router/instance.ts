@@ -3,12 +3,16 @@ import fastifySensible from "@fastify/sensible";
 import { Routes } from "./routes";
 import { renderErrorPage } from "./process";
 import fs from "node:fs";
+import { RpcMethod } from "./rpc/rpcMethod";
+import { RpcServer } from "./rpc/json-rpc";
 
 let serverInstance: FastifyInstance | null = null;
 
-const getServerInstance = async (): Promise<FastifyInstance> => {
+const getServerInstance = async (
+  rpcMethods?: RpcMethod[]
+): Promise<FastifyInstance> => {
   if (!serverInstance) {
-    serverInstance = await createServer();
+    serverInstance = await createServer(rpcMethods);
     await serverInstance.ready();
   }
   return serverInstance;
@@ -31,7 +35,9 @@ const envToLogger: Record<NodeEnv, unknown> = {
   test: false,
 };
 
-async function createServer(): Promise<FastifyInstance> {
+async function createServer(
+  rpcMethods?: RpcMethod[]
+): Promise<FastifyInstance> {
   const nodeEnv = (process.env.NODE_ENV ?? "development") as NodeEnv;
   const fastify = Fastify({
     logger: envToLogger[nodeEnv] ?? true,
@@ -41,12 +47,15 @@ async function createServer(): Promise<FastifyInstance> {
   await fastify.register(async function appScope(app) {
     Routes.favicon(app);
     Routes.wildcard(app);
+    Routes.jsonRpc(app);
+
+    for (const rpcMethod of rpcMethods ?? []) {
+      RpcServer.addMethod(rpcMethod.name, rpcMethod.handler);
+    }
 
     const allPages = JSON.parse(fs.readFileSync(".luma/pages.json").toString());
 
     app.setErrorHandler((error, request, reply) => {
-      console.log("Got error", error, error.statusCode);
-
       if (error.statusCode && [302, 301].includes(error.statusCode)) {
         return reply.redirect(error.message, error.statusCode);
       }

@@ -71,6 +71,7 @@ function useEffect<T>(callback: () => T, deps: any[]): void {
     !oldDeps ||
     oldDeps.length !== deps.length ||
     !oldDeps.every((dep: any, idx: number) => dep === deps[idx]);
+
   if (shouldRunEffect) {
     hooks[idx] = deps;
     callback();
@@ -87,7 +88,8 @@ function useRef<T>(initialValue: T): Ref<T> {
     throw new Error("Hooks can only be called inside of components");
   }
 
-  return { current: initialValue };
+  registerHook({ current: initialValue });
+  return hooks[hookIdx++];
 }
 
 function createContext<T>(defaultValue: T) {

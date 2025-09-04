@@ -1,11 +1,20 @@
 import { getServerInstance } from "./instance";
+import { RpcMethod } from "./rpc/rpcMethod";
 
-const startServer = async (port?: number, host?: string) => {
+const startServer = async ({
+  port,
+  host,
+  rpcMethods,
+}: {
+  port?: number;
+  host?: string;
+  rpcMethods?: RpcMethod[];
+}) => {
   const defaultPort = 3000;
   const defaultHost = "localhost";
 
   try {
-    const serverInstance = await getServerInstance();
+    const serverInstance = await getServerInstance(rpcMethods);
 
     await serverInstance.listen({
       port: port ?? defaultPort,
