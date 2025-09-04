@@ -63,19 +63,46 @@ function useState<T>(initialState: T): [T, Function] {
 }
 
 function useEffect<T>(callback: () => T, deps: any[]): void {
-  registerHook(deps);
+  registerHook({ deps: undefined, cleanup: undefined });
   const idx = hookIdx;
+  const hook = hooks[idx];
 
-  const oldDeps = hooks[hookIdx++];
-  const shouldRunEffect =
-    !oldDeps ||
-    oldDeps.length !== deps.length ||
-    !oldDeps.every((dep: any, idx: number) => dep === deps[idx]);
+  const depsChanged = (oldDeps: any[], newDeps: any[]): boolean => {
+    if (!oldDeps) return true;
+    if (oldDeps.length !== newDeps.length) return true;
+
+    for (let i = 0; i < oldDeps.length; i++) {
+      const oldDep = oldDeps[i];
+      const newDep = newDeps[i];
+
+      if (oldDep && typeof oldDep === "object" && "current" in oldDep) {
+        if (oldDep.current !== newDep.current) return true;
+      } else if (oldDep !== newDep) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const shouldRunEffect = depsChanged(hook.deps, deps);
 
   if (shouldRunEffect) {
-    hooks[idx] = deps;
-    callback();
+    if (typeof hook.cleanup === "function") {
+      hook.cleanup();
+    }
+
+    hook.deps = deps.map((dep) => {
+      if (dep && typeof dep === "object" && "current" in dep) {
+        return { current: dep.current };
+      }
+      return dep;
+    });
+
+    const cleanup = callback();
+    hook.cleanup = cleanup;
   }
+
+  hookIdx++;
 }
 
 function useId(): string {
