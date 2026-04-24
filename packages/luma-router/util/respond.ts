@@ -11,7 +11,7 @@ function respondOk(
   component: ({ props }: { props: any }) => any /* VNode */,
   layout: ({ children }: { children: any }) => any /* VNode */,
   cssBundle: string,
-  meta: Metadata | null
+  meta: Metadata | null,
 ) {
   const frameworkBundle = fs.readFileSync(".luma/framework.js", {
     encoding: "utf-8",
@@ -22,25 +22,28 @@ function respondOk(
     htmlify(
       layout({
         children: component(serverProps),
-      })
-    )
+      }),
+    ),
   );
 
   $("head").append(
-    `<head>
-      <link
-        href="./${cssBundle}"
-        type="text/css"
-        rel="stylesheet"
-      />
-    </head>`
+    `<link href="./${cssBundle}" type="text/css" rel="stylesheet" />`,
   );
+
+  if (fs.existsSync(`.luma/pages/server/layout.css`)) {
+    const layoutCss = fs.readFileSync(".luma/pages/server/layout.css", {
+      encoding: "utf-8",
+      flag: "r",
+    });
+
+    $("head").append(`<style>${layoutCss}</style>`);
+  }
 
   $("body").append(
     `<script>window.__LUMA_SSR_PROPS__ = ${JSON.stringify(serverProps)}</script>
     <script>${frameworkBundle}</script>
     <script>${clientBundle}</script>
-    `
+    `,
   );
 
   if (meta) {
@@ -49,12 +52,12 @@ function respondOk(
     }
     if (meta.description) {
       $("head").append(
-        `<meta name="description" content="${meta.description}"/>`
+        `<meta name="description" content="${meta.description}"/>`,
       );
     }
     if (meta.keywords) {
       $("head").append(
-        `<meta name="keywords" content="${meta.keywords.join(", ")}"/>`
+        `<meta name="keywords" content="${meta.keywords.join(", ")}"/>`,
       );
     }
     if (meta.og) {

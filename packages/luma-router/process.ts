@@ -6,7 +6,7 @@ import fs from "node:fs";
 async function renderPage(
   requestUrl: string,
   reply: FastifyReply,
-  page: PageMapping
+  page: PageMapping,
 ) {
   if (!page.server.refs || !page.client.refs) {
     throw new Error("No refs for page");
@@ -23,7 +23,7 @@ async function renderPage(
 
   if (!serverPath || !clientPath) {
     throw new Error(
-      `Cannot find server or client ref for page ${requestUrl.toLowerCase()}`
+      `Cannot find server or client ref for page ${requestUrl.toLowerCase()}`,
     );
   }
 
@@ -36,12 +36,10 @@ async function renderPage(
     metadata,
   } = require(serverPath);
 
-  console.log("before");
   const serverProps = await getServerProps?.({
     searchParams: urlObj.searchParams,
     uri: urlObj.pathname,
   });
-  console.log("after");
 
   const meta =
     metadata ||
@@ -56,7 +54,7 @@ async function renderPage(
     ServerComponent,
     LayoutComponent,
     page.cssBundle,
-    meta
+    meta,
   );
 }
 
@@ -65,22 +63,22 @@ async function renderErrorPage(
   is404Error: boolean,
   errorConfig: PageMapping,
   requestUrl: string,
-  err: Error | null
+  err: Error | null,
 ) {
   if (!errorConfig.server.refs || !errorConfig.client.refs) {
     throw new Error("No refs found in error config."); // Should never happen. If it does, it's a bug in luma-cli
   }
 
   const serverPageRef = errorConfig.server.refs.find((ref) =>
-    ref.endsWith(is404Error ? "404.page.js" : "error.page.js")
+    ref.endsWith(is404Error ? "404.page.js" : "error.page.js"),
   );
   const clientPageRef = errorConfig.client.refs.find((ref) =>
-    ref.endsWith(is404Error ? "404.page.js" : "error.page.js")
+    ref.endsWith(is404Error ? "404.page.js" : "error.page.js"),
   );
 
   if (!serverPageRef || !clientPageRef) {
     throw new Error(
-      "No error page found in _error. Did you forget to add error pages?"
+      "No error page found in _error. Did you forget to add error pages?",
     );
   }
 
@@ -109,7 +107,7 @@ async function renderErrorPage(
     ServerComponent,
     LayoutComponent,
     errorConfig.cssBundle ?? "",
-    null
+    null,
   );
 }
 
