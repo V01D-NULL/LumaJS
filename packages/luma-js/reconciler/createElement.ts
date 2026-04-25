@@ -18,6 +18,8 @@ function createElement(
 
     fc.data = {
       ...fc.data,
+      // FIXME: This will break if there are multiple hooks (example two insert hooks from domHooks and hook).
+      // I'm too tired to fix this right now, it's late and I need to sleep. I'll fix this in the future, but for now, this is a known issue.
       hook: {
         ...fc.data?.hook,
         ...LumaCurrentComponent.current?.domHooks,
