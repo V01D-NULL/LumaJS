@@ -18,7 +18,10 @@ function createElement(
 
     fc.data = {
       ...fc.data,
-      hook: LumaCurrentComponent.current?.domHooks,
+      hook: {
+        ...fc.data?.hook,
+        ...LumaCurrentComponent.current?.domHooks,
+      },
 
       /* LumaJS specific data */
       luma: {
