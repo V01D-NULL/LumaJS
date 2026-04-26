@@ -31,7 +31,7 @@ function dispatch() {
 
   LumaCurrentRootComponent.current = reconcile(
     LumaCurrentRootComponent.current,
-    component
+    component,
   );
   isRendering = false;
 }
@@ -43,7 +43,9 @@ function batchUpdates() {
   }
 }
 
-function useState<T>(initialState: T): [T, Function] {
+type SetState<T> = (newState: T | ((prev: T) => T)) => void;
+
+function useState<T>(initialState: T): [T, SetState<T>] {
   registerHook(initialState);
   const idx = hookIdx;
 
