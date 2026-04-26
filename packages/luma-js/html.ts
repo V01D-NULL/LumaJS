@@ -30,9 +30,9 @@ declare global {
       children: {};
     }
 
-    interface IntrinsicElements {
-      [elemName: string]: HostComponent;
-    }
+    type IntrinsicElements = {
+      [elemName in keyof HTMLElementTagNameMap]: HostComponent;
+    };
   }
 
   type DebugProps = {
