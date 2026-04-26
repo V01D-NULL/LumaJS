@@ -1,4 +1,6 @@
 export abstract class RpcMethod {
-  public name!: string;
-  public abstract handler(...args: unknown[]): void;
+  public abstract name: string;
+  public abstract handler(
+    params: Record<string, unknown>,
+  ): Promise<unknown> | unknown;
 }

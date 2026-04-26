@@ -5,11 +5,12 @@ import { renderErrorPage } from "./process";
 import fs from "node:fs";
 import { RpcMethod } from "./rpc/rpcMethod";
 import { RpcServer } from "./rpc/json-rpc";
+import { JSONRPCErrorCode, JSONRPCResponse } from "json-rpc-2.0";
 
 let serverInstance: FastifyInstance | null = null;
 
 const getServerInstance = async (
-  rpcMethods?: RpcMethod[]
+  rpcMethods?: RpcMethod[],
 ): Promise<FastifyInstance> => {
   if (!serverInstance) {
     serverInstance = await createServer(rpcMethods);
@@ -36,7 +37,7 @@ const envToLogger: Record<NodeEnv, unknown> = {
 };
 
 async function createServer(
-  rpcMethods?: RpcMethod[]
+  rpcMethods?: RpcMethod[],
 ): Promise<FastifyInstance> {
   const nodeEnv = (process.env.NODE_ENV ?? "development") as NodeEnv;
   const fastify = Fastify({
@@ -50,7 +51,30 @@ async function createServer(
     Routes.jsonRpc(app);
 
     for (const rpcMethod of rpcMethods ?? []) {
-      RpcServer.addMethod(rpcMethod.name, rpcMethod.handler);
+      // TODO: This is ugly. Needs a refactor. I am too lazy rn, just want to quickly add async support for another project I am working on.
+      RpcServer.addMethodAdvanced(rpcMethod.name, async (args) => {
+        try {
+          const result = await Promise.resolve(rpcMethod.handler(args.params));
+          return {
+            id: args.id ?? null,
+            jsonrpc: "2.0",
+            result,
+          };
+        } catch (e) {
+          app.log.error(e);
+          return {
+            id: args.id ?? null,
+            jsonrpc: "2.0",
+            error: {
+              code: JSONRPCErrorCode.InternalError, // TODO: Handle errors better. I'm still too lazy to fix both these in one go.
+              message: "Internal server error",
+              data: JSON.stringify(
+                e instanceof Error ? { message: e.message } : e,
+              ),
+            },
+          };
+        }
+      });
     }
 
     const allPages = JSON.parse(fs.readFileSync(".luma/pages.json").toString());
@@ -65,7 +89,7 @@ async function createServer(
         error.statusCode === 404,
         allPages["/_error"],
         request.url,
-        null
+        null,
       );
     });
   });
